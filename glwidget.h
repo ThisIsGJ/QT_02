@@ -80,9 +80,10 @@ private:
     void makeSpots(int tim, QImage *buf);
     void drawCircle(int radius, int xcen, int ycen,  QImage *buf);
     void drawFace( int tim, float w);
-    GLuint makeDice( );
+    GLuint makeDice();
     void initLight();
-
+    void makeGround();
+    void makeAxes();
 
 
 };

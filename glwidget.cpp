@@ -44,6 +44,7 @@ void GLWidget::clear()
 
 void GLWidget::initializeGL()
 {
+
     int i;
     QImage buf(256, 256, QImage::Format_RGB32);
 
@@ -101,12 +102,11 @@ void GLWidget::paintGL()
    // glTranslatef( 0.0, 0.0, -10.0 );
    // glScalef( scale, scale, scale );
 
-    glRotatef( xangle, 1.0, 0.0, 0.0 );
-    glRotatef( yangle, 0.0, 1.0, 0.0 );
-    glRotatef( zangle, 0.0, 0.0, 1.0 );
-
    // glCallList( object );   no display list this version just make the cube
+   // makeGround();
+    makeAxes();
     makeDice();
+
 }
 
 /* 2D */
@@ -187,18 +187,19 @@ void GLWidget::initLight()
 
 }
 
-GLuint GLWidget::makeDice( )
+GLuint GLWidget::makeDice()
 {
-
-
     GLuint list;
     float w = 0.8;
 
   //  list = glGenLists( 1 );
  //   glNewList( list, GL_COMPILE );   no display list this version
 
-
     // one
+    glRotatef( xangle, 1.0, 0.0, 0.0 );
+    glRotatef( yangle, 0.0, 1.0, 0.0 );
+    glRotatef( zangle, 0.0, 0.0, 1.0 );
+
     drawFace(0,  w);
 
     // six
@@ -231,8 +232,6 @@ GLuint GLWidget::makeDice( )
     drawFace(4, w);
     glPopMatrix();
 
-
-
   //  glEndList();
 
   //  return list;
@@ -254,6 +253,48 @@ void GLWidget::drawFace( int tim, float w)
     glVertex3f(   w,   w, w );
     //glTexCoord2f(1.0, 0.0);
     glVertex3f(  -w,   w, w );
+
+    glEnd();
+
+}
+
+void GLWidget::makeGround(void)
+{
+    //glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(0.0, 0.0, 0.1);
+    glBegin(GL_LINES);
+        for (float i = 10; i >= -10; i = i - 0.5) {
+            glVertex3f(10, -0.8, i);
+            glVertex3f(-10, -0.8, i);
+            glVertex3f(i, -0.8, 10);
+            glVertex3f(i, -0.8, -10);
+        }
+
+    glEnd();
+}
+
+void GLWidget::makeAxes()
+{
+    GLfloat lSizes[4];
+    glColor3f(0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+
+    //x
+    //glRect6f(-0.2,-0.8,1.5,0.2,-0.8,1.5);
+    //glGetFloatv(GL_LINE_WIDTH_RANGE,lSizes);
+
+    //glLineWidth(lSizes);
+
+    glVertex3f(-0.2,-0.8,1.5);
+    glVertex3f(0.2,-0.8,1.5);
+
+    //y
+    glVertex3f(-0.2,-0.8,1.5);
+    glVertex3f(-0.2,-0.4,1.5);
+
+    //z
+    glVertex3f(-0.2,-0.8,1.5);
+    glVertex3f(-0.2,-0.8,1.9);
     glEnd();
 
 }
@@ -378,10 +419,11 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
  /*   if (df->getPan()) dopan(e->x(), height()-e->y() , true);
     else {*/
 
-   /* button =  e->button();
+    button =  e->button();
     if (button==Qt::LeftButton) {
+        //qDebug() << "sa";
+    }
 
-    }*/
     updateGL();
 }
 
