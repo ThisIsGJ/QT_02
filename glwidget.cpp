@@ -12,7 +12,12 @@ GLfloat vertices[4][2] = {{100.0, 100.0}, {400.0, 100.0}, {400.0, 400.0}, {100.0
 GLubyte indices[] = {0,1,1,2,2,3,3,0};
 
 GLWidget::GLWidget(QWidget *parent)
-    : QGLWidget(parent)
+    : QGLWidget(parent),
+      mClickLocationX(0),
+      mClickLocationY(0),
+      mClickLocationZ(0),
+      left(false),
+      right(false)
 {
     startup();
 }
@@ -103,7 +108,7 @@ void GLWidget::paintGL()
    // glScalef( scale, scale, scale );
 
    // glCallList( object );   no display list this version just make the cube
-   // makeGround();
+    makeGround();
     makeAxes();
     makeDice();
 
@@ -420,8 +425,13 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     else {*/
 
     button =  e->button();
-    if (button==Qt::LeftButton) {
-        //qDebug() << "sa";
+    if (button == Qt::LeftButton) {
+        left = true;
+        mClickLocationX = e->x();
+        mClickLocationY = e->y();
+    }else if(button == Qt::RightButton){
+        right = true;
+        mClickLocationZ = e->y();
     }
 
     updateGL();
@@ -429,13 +439,32 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
 
 void GLWidget::mouseReleaseEvent( QMouseEvent *e)
 {
-
+    if(left){ left = false;}
+    if(right){right = false;}
     updateGL();
 }
 
 void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 {
-  //  button =  e->button();
+    button =  e->button();
+
+    if(left)
+    {
+        int mouseX = e->x();
+        int mouseY = e->y();
+
+        xfrom = xfrom + (mouseX - mClickLocationX)/2;
+        yfrom = yfrom + (mouseY - mClickLocationY)/2;
+
+        mClickLocationX = mouseX;
+        mClickLocationY = mouseY;
+
+    }else if(right){
+        int mouseZ = e->y();
+        zfrom = zfrom + (mouseZ - mClickLocationZ)/2;
+        mClickLocationZ = mouseZ;
+    }
+
 
     updateGL();
 }
