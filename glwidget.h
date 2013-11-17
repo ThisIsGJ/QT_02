@@ -74,6 +74,11 @@ private:
     double xangle, yangle, zangle, scale;
     QImage tex[6]; // one for each face
     bool filled;
+    int mClickLocationX;
+    int mClickLocationY;
+    int mClickLocationZ;
+    bool left;
+    bool right;
 
     // Functions
     void redraw();
