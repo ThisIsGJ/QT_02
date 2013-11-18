@@ -16,6 +16,7 @@
 #include "version.h"
 
 
+
 const int maxw=1024;
 const int maxh=1024;
 //This is our OpenGL Component we built it on top of QGLWidget
@@ -58,7 +59,7 @@ protected:
 
 private:
     void startup();
-    GLdouble xfrom,yfrom,zfrom, xto, yto, zto;
+    GLdouble xfrom,yfrom,zfrom, xto, yto, zto,radius;
     int winw, winh, button,imx,imy;
     int version;
     void dopan(int x, int y, bool click);
@@ -79,6 +80,9 @@ private:
     int mClickLocationZ;
     bool left;
     bool right;
+    int zSide;
+    int zSidex;
+
 
     // Functions
     void redraw();
