@@ -59,7 +59,7 @@ protected:
 
 private:
     void startup();
-    GLdouble xfrom,yfrom,zfrom, xto, yto, zto,radius;
+    GLdouble xfrom,yfrom,zfrom, xto, yto, zto,radius,angleX,angleY;
     int winw, winh, button,imx,imy;
     int version;
     void dopan(int x, int y, bool click);
