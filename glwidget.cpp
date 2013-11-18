@@ -21,9 +21,8 @@ GLWidget::GLWidget(QWidget *parent)
       right(false),
       radius(0),
       angleX(0),
-      angleY(0),
-      zSide(1),
-      zSidex(1)
+      angleY(0)
+
 {
     startup();
 }

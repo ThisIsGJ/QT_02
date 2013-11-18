@@ -80,8 +80,7 @@ private:
     int mClickLocationZ;
     bool left;
     bool right;
-    int zSide;
-    int zSidex;
+
 
 
     // Functions
