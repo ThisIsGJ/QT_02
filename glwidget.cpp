@@ -3,7 +3,8 @@
 //-------------------------------------------------------------------------------------------
 
 #include "glwidget.h"
-
+#include <QtCore/qmath.h>
+#include <QtMath>
 
 
 const double torad = M_PI/180.0;
@@ -17,7 +18,10 @@ GLWidget::GLWidget(QWidget *parent)
       mClickLocationY(0),
       mClickLocationZ(0),
       left(false),
-      right(false)
+      right(false),
+      radius(0),
+      zSide(1),
+      zSidex(1)
 {
     startup();
 }
@@ -38,6 +42,7 @@ void GLWidget::startup()
     scale = 1.5;
     object =0; // in this version no display list
     xfrom=yfrom=zfrom=5.0;
+    radius = qSqrt(75);
     xto=yto=zto=0.0;
     filled=false;
 }
@@ -205,6 +210,8 @@ GLuint GLWidget::makeDice()
     glRotatef( yangle, 0.0, 1.0, 0.0 );
     glRotatef( zangle, 0.0, 0.0, 1.0 );
 
+    glLineWidth(4);
+
     drawFace(0,  w);
 
     // six
@@ -266,6 +273,7 @@ void GLWidget::drawFace( int tim, float w)
 void GLWidget::makeGround(void)
 {
     //glClear(GL_COLOR_BUFFER_BIT);
+    glLineWidth(0.3);
     glColor3f(0.0, 0.0, 0.1);
     glBegin(GL_LINES);
         for (float i = 10; i >= -10; i = i - 0.5) {
@@ -280,26 +288,23 @@ void GLWidget::makeGround(void)
 
 void GLWidget::makeAxes()
 {
-    GLfloat lSizes[4];
+    glLineWidth(4);
+   // GLfloat lSizes[4];
     glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
 
     //x
-    //glRect6f(-0.2,-0.8,1.5,0.2,-0.8,1.5);
-    //glGetFloatv(GL_LINE_WIDTH_RANGE,lSizes);
-
-    //glLineWidth(lSizes);
-
     glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(0.2,-0.8,1.5);
+    glVertex3f(0.6,-0.8,1.5);
 
     //y
     glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(-0.2,-0.4,1.5);
+    glVertex3f(-0.2,-0.0,1.5);
 
     //z
     glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(-0.2,-0.8,1.9);
+    glVertex3f(-0.2,-0.8,2.3);
+
     glEnd();
 
 }
@@ -426,9 +431,11 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
 
     button =  e->button();
     if (button == Qt::LeftButton) {
+
         left = true;
         mClickLocationX = e->x();
         mClickLocationY = e->y();
+
     }else if(button == Qt::RightButton){
         right = true;
         mClickLocationZ = e->y();
@@ -453,16 +460,40 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
         int mouseX = e->x();
         int mouseY = e->y();
 
-        xfrom = xfrom + (mouseX - mClickLocationX)/2;
-        yfrom = yfrom + (mouseY - mClickLocationY)/2;
+        xfrom = xfrom + zSidex*(mouseX - mClickLocationX)/10.0;
+        if(qSqrt(xfrom*xfrom) > radius){
+
+            if(mouseX > mClickLocationX){
+                xfrom = radius*zSidex;
+                zSidex = zSidex * (-1);
+            }else{
+                zSidex = zSidex * (-1);
+                xfrom = radius*zSidex;
+            }
+        }
+
+        yfrom = yfrom + zSide*(mouseY - mClickLocationY)/10.0;
+        if(qSqrt(yfrom*yfrom) > radius){
+            if(mouseY > mClickLocationY){
+                yfrom = radius*zSide;
+                zSide = zSide * (-1);
+            }else{
+                zSide = zSide * (-1);
+                yfrom = radius*zSide;
+            }
+        }
+
+        zfrom = qSqrt(radius*radius - xfrom*xfrom - yfrom*yfrom)*zSide*zSidex;
 
         mClickLocationX = mouseX;
         mClickLocationY = mouseY;
 
     }else if(right){
+
         int mouseZ = e->y();
-        zfrom = zfrom + (mouseZ - mClickLocationZ)/2;
+        zfrom = zfrom + (mouseZ - mClickLocationZ)/10.0;
         mClickLocationZ = mouseZ;
+        radius = sqrt(zfrom*zfrom + xfrom*xfrom + yfrom*yfrom);
     }
 
 
