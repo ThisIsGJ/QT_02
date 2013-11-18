@@ -20,6 +20,8 @@ GLWidget::GLWidget(QWidget *parent)
       left(false),
       right(false),
       radius(0),
+      angleX(0),
+      angleY(0),
       zSide(1),
       zSidex(1)
 {
@@ -44,6 +46,8 @@ void GLWidget::startup()
     xfrom=yfrom=zfrom=5.0;
     radius = qSqrt(75);
     xto=yto=zto=0.0;
+    angleX = atan(zfrom/xfrom);
+    angleY = atan(yfrom/zfrom);
     filled=false;
 }
 
@@ -460,40 +464,35 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
         int mouseX = e->x();
         int mouseY = e->y();
 
-        xfrom = xfrom + zSidex*(mouseX - mClickLocationX)/10.0;
-        if(qSqrt(xfrom*xfrom) > radius){
-
-            if(mouseX > mClickLocationX){
-                xfrom = radius*zSidex;
-                zSidex = zSidex * (-1);
-            }else{
-                zSidex = zSidex * (-1);
-                xfrom = radius*zSidex;
-            }
+        if(mouseX != mClickLocationX)
+        {
+            angleX = angleX + (mouseX - mClickLocationX)/10.0;
+            xfrom = radius * cos(angleX);
+            zfrom = radius * sin(angleX);
         }
 
-        yfrom = yfrom + zSide*(mouseY - mClickLocationY)/10.0;
-        if(qSqrt(yfrom*yfrom) > radius){
-            if(mouseY > mClickLocationY){
-                yfrom = radius*zSide;
-                zSide = zSide * (-1);
-            }else{
-                zSide = zSide * (-1);
-                yfrom = radius*zSide;
-            }
-        }
+        if(mouseY != mClickLocationY)
+        {
+            angleY = angleY + (mouseY - mClickLocationY)/10.0;
 
-        zfrom = qSqrt(radius*radius - xfrom*xfrom - yfrom*yfrom)*zSide*zSidex;
+            yfrom = radius * sin(angleY);
+            zfrom = radius * cos(angleY);
+        }
 
         mClickLocationX = mouseX;
         mClickLocationY = mouseY;
 
+
     }else if(right){
 
-        int mouseZ = e->y();
-        zfrom = zfrom + (mouseZ - mClickLocationZ)/10.0;
+        int mouseZ = e->y();              
+        radius = radius + (mouseZ - mClickLocationZ)/10.0;
+        yfrom = radius * sin(angleY);
+        xfrom = radius * cos(angleY)*cos(angleX);
+        zfrom = xfrom * tan(angleX);
+
         mClickLocationZ = mouseZ;
-        radius = sqrt(zfrom*zfrom + xfrom*xfrom + yfrom*yfrom);
+
     }
 
 
