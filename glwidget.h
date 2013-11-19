@@ -14,6 +14,7 @@
 #include <QtOpenGL>
 #include <glu.h>
 #include "version.h"
+#include <QList>
 
 
 
@@ -80,6 +81,10 @@ private:
     int mClickLocationZ;
     bool left;
     bool right;
+    int pointNumber;
+    QList<QList<double> > pointAll;
+    QList<double> point;
+
 
 
 
@@ -92,7 +97,8 @@ private:
     void initLight();
     void makeGround();
     void makeAxes();
-
+    void setViewPoint();
+    void getViewPoint();
 
 };
 
