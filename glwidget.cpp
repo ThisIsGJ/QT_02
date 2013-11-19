@@ -5,6 +5,7 @@
 #include "glwidget.h"
 #include <QtCore/qmath.h>
 #include <QtMath>
+#include <QList>
 
 
 const double torad = M_PI/180.0;
@@ -21,7 +22,8 @@ GLWidget::GLWidget(QWidget *parent)
       right(false),
       radius(0),
       angleX(0),
-      angleY(0)
+      angleY(0),
+      pointNumber(0)
 
 {
     startup();
@@ -48,6 +50,7 @@ void GLWidget::startup()
     angleX = atan(zfrom/xfrom);
     angleY = atan(yfrom/zfrom);
     filled=false;
+    setViewPoint();
 }
 
 void GLWidget::clear()
@@ -131,6 +134,46 @@ void GLWidget::resizeGL( int w, int h )
     glFrustum( -1.0, 1.0, -1.0, 1.0, 5.0, 1500.0 );
     glMatrixMode( GL_MODELVIEW );
 }
+
+void GLWidget::setViewPoint()
+{
+    point.append(0);
+    point.append(0);
+    point.append(0);
+    pointAll.append(point);
+
+    point.clear();
+    point.append(0);
+    point.append(0.8);
+    point.append(0);
+    pointAll.append(point);
+
+    point.clear();
+    point.append(-0.8);
+    point.append(0);
+    point.append(0);
+    pointAll.append(point);
+
+    point.clear();
+    point.append(-0.8);
+    point.append(0.8);
+    point.append(0);
+    pointAll.append(point);
+
+    point.clear();
+    point.append(0.8);
+    point.append(0.8);
+    point.append(-0.8);
+    pointAll.append(point);
+
+    point.clear();
+    point.append(0.8);
+    point.append(0.8);
+    point.append(0);
+    pointAll.append(point);
+
+}
+
 
 void GLWidget::about()
 {
@@ -425,6 +468,20 @@ void GLWidget::setzFrom(int a)
     updateGL();
 }
 
+void GLWidget::getViewPoint()
+{
+    if(pointNumber >= 5){
+        pointNumber = 0;
+    }else{
+        pointNumber++;
+    }
+
+    xto = pointAll[pointNumber][0];
+    yto = pointAll[pointNumber][1];
+    zto = pointAll[pointNumber][2];
+}
+
+
 // mouse routines for camera control to be implemented
 void GLWidget::mousePressEvent( QMouseEvent *e )
 {
@@ -442,6 +499,9 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     }else if(button == Qt::RightButton){
         right = true;
         mClickLocationZ = e->y();
+    }else if(button == Qt::MidButton)
+    {
+        getViewPoint();
     }
 
     updateGL();
