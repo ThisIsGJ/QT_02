@@ -68,7 +68,7 @@ GLfloat whiteDir[4] = {2.0, 2.0, 2.0, 1.0};
 GLfloat whiteAmb[4] = {1.0, 1.0, 1.0, 1.0};
 GLfloat lightPos[4] = {30.0, 30.0, 30.0, 1.0};
 
-glEnable(GL_LIGHTING);
+//glEnable(GL_LIGHTING);
 glEnable(GL_LIGHT0);
 glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 glLightModelfv(GL_LIGHT_MODEL_AMBIENT, whiteAmb);
@@ -340,16 +340,16 @@ void GLWidget::makeAxes()
     glBegin(GL_LINES);
 
     //x
-    glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(0.6,-0.8,1.5);
+    glVertex3f(-1.0,-0.8,-1.0);
+    glVertex3f(3,-0.8,-1.0);
 
     //y
-    glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(-0.2,-0.0,1.5);
+    glVertex3f(-1.0,-0.8,-1.0);
+    glVertex3f(-1.0,3.2,-1.0);
 
     //z
-    glVertex3f(-0.2,-0.8,1.5);
-    glVertex3f(-0.2,-0.8,2.3);
+    glVertex3f(-1.0,-0.8,-1.0);
+    glVertex3f(-1.2,-0.8,3.0);
 
     glEnd();
 
@@ -523,20 +523,11 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
         int mouseX = e->x();
         int mouseY = e->y();
 
-        if(mouseX != mClickLocationX)
-        {
-            angleX = angleX + (mouseX - mClickLocationX)/10.0;
-            xfrom = radius * cos(angleX);
-            zfrom = radius * sin(angleX);
-        }
-
-        if(mouseY != mClickLocationY)
-        {
-            angleY = angleY + (mouseY - mClickLocationY)/10.0;
-
-            yfrom = radius * sin(angleY);
-            zfrom = radius * cos(angleY);
-        }
+        angleX = angleX + (mouseX - mClickLocationX)/10.0;
+        angleY = angleY + (mouseY - mClickLocationY)/10.0;
+        xfrom = radius * cos(angleY)*cos(angleX);
+        yfrom = radius * sin(angleY);
+        zfrom = xfrom*tan(angleX);
 
         mClickLocationX = mouseX;
         mClickLocationY = mouseY;
