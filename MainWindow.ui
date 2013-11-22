@@ -14,6 +14,35 @@
    <string>OpenGl - Qt -Direct Mode Drawing</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QScrollArea" name="glWidgetArea">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>582</width>
+        <height>521</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QFrame" name="frame">
      <property name="enabled">
@@ -56,35 +85,6 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QScrollArea" name="glWidgetArea">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>582</width>
-        <height>521</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="maximumSize">
@@ -96,24 +96,11 @@
      <property name="title">
       <string>Tool Box</string>
      </property>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>20</y>
-        <width>113</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Push Me</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>20</y>
         <width>61</width>
         <height>16</height>
        </rect>
@@ -122,26 +109,13 @@
        <string>Rotations</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>11</x>
-        <y>300</y>
-        <width>131</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Camera Position</string>
-      </property>
-     </widget>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>150</y>
+        <x>10</x>
+        <y>100</y>
         <width>151</width>
-        <height>51</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -177,10 +151,10 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>80</y>
+        <x>10</x>
+        <y>40</y>
         <width>151</width>
-        <height>51</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -216,10 +190,10 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>220</y>
+        <x>10</x>
+        <y>160</y>
         <width>151</width>
-        <height>51</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_3">
@@ -255,8 +229,8 @@
      <widget class="QRadioButton" name="radioButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>470</y>
+        <x>40</x>
+        <y>410</y>
         <width>61</width>
         <height>20</height>
        </rect>
@@ -265,71 +239,57 @@
        <string>Filled</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>320</y>
-        <width>81</width>
-        <height>103</height>
+        <y>220</y>
+        <width>151</width>
+        <height>32</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_5">
-           <property name="styleSheet">
-            <string notr="true">font: 75 18pt &quot;Lucida Grande&quot;;
-color: rgb(255, 0, 0);</string>
-           </property>
-           <property name="text">
-            <string>X</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_6">
-           <property name="styleSheet">
-            <string notr="true">font: 75 18pt &quot;Lucida Grande&quot;;
-color: rgb(0, 255, 0);</string>
-           </property>
-           <property name="text">
-            <string>Y</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_2"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_8">
-           <property name="styleSheet">
-            <string notr="true">font: 75 18pt &quot;Lucida Grande&quot;;
-color: rgb(0, 0, 255);</string>
-           </property>
-           <property name="text">
-            <string>Z</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_3"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
+      <property name="text">
+       <string>perspective</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>top view</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>260</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>right view</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>280</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>front view</string>
+      </property>
      </widget>
     </widget>
    </item>
@@ -418,30 +378,14 @@ color: rgb(0, 0, 255);</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>frmMain</receiver>
-   <slot>pushmebut()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>101</x>
-     <y>104</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>190</x>
-     <y>155</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>horizontalSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>frmMain</receiver>
    <slot>xrot(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>95</x>
-     <y>181</y>
+     <x>107</x>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
      <x>186</x>
@@ -456,8 +400,8 @@ color: rgb(0, 0, 255);</string>
    <slot>yrot(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>251</y>
+     <x>98</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
      <x>188</x>
@@ -472,8 +416,8 @@ color: rgb(0, 0, 255);</string>
    <slot>zrot(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>89</x>
-     <y>321</y>
+     <x>104</x>
+     <y>264</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -488,12 +432,12 @@ color: rgb(0, 0, 255);</string>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>181</y>
+     <x>107</x>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>182</y>
+     <x>175</x>
+     <y>145</y>
     </hint>
    </hints>
   </connection>
@@ -504,12 +448,12 @@ color: rgb(0, 0, 255);</string>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>251</y>
+     <x>81</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>137</x>
-     <y>252</y>
+     <x>175</x>
+     <y>205</y>
     </hint>
    </hints>
   </connection>
@@ -520,60 +464,12 @@ color: rgb(0, 0, 255);</string>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>321</y>
+     <x>79</x>
+     <y>264</y>
     </hint>
     <hint type="destinationlabel">
-     <x>148</x>
-     <y>322</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>frmMain</receiver>
-   <slot>xFrom(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>45</x>
-     <y>385</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>190</x>
-     <y>382</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>frmMain</receiver>
-   <slot>yFrom(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>97</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>190</x>
-     <y>442</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_3</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>frmMain</receiver>
-   <slot>zFrom(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>74</x>
-     <y>466</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>189</x>
-     <y>506</y>
+     <x>175</x>
+     <y>265</y>
     </hint>
    </hints>
   </connection>
@@ -584,12 +480,76 @@ color: rgb(0, 0, 255);</string>
    <slot>filledOn(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>42</x>
-     <y>532</y>
+     <x>74</x>
+     <y>482</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
      <y>550</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>frmMain</receiver>
+   <slot>pView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>284</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>frmMain</receiver>
+   <slot>tView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>frmMain</receiver>
+   <slot>rView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>frmMain</receiver>
+   <slot>fView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>163</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>446</y>
     </hint>
    </hints>
   </connection>
@@ -603,5 +563,9 @@ color: rgb(0, 0, 255);</string>
   <slot>yFrom(int)</slot>
   <slot>zFrom(int)</slot>
   <slot>filledOn(bool)</slot>
+  <slot>pView()</slot>
+  <slot>tView()</slot>
+  <slot>rView()</slot>
+  <slot>fView()</slot>
  </slots>
 </ui>

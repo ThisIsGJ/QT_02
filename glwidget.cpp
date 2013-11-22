@@ -20,11 +20,10 @@ GLWidget::GLWidget(QWidget *parent)
       mClickLocationZ(0),
       left(false),
       right(false),
-      radius(0),
       angleX(0),
       angleY(0),
-      pointNumber(0)
-
+      pointNumber(0),
+      state(0)
 {
     startup();
 }
@@ -44,12 +43,15 @@ void GLWidget::startup()
     xangle= yangle= zangle=0.0;
     scale = 1.5;
     object =0; // in this version no display list
-    xfrom=yfrom=zfrom=5.0;
-    radius = qSqrt(75);
+    xfrom=yfrom=zfrom=10.0;
+    radius = qSqrt(300);
     xto=yto=zto=0.0;
-    angleX = atan(zfrom/xfrom);
-    angleY = atan(yfrom/zfrom);
+    angleX = atan(1);
+    angleY = atan(1/sqrt(50));
     filled=false;
+    upX = 0;
+    upY = 1;
+    upZ = 0;
     setViewPoint();
 }
 
@@ -97,9 +99,15 @@ glEnable( GL_TEXTURE_2D );
 
 // Set up various other stuff
 glClearColor( 0.5, 1.0, 0.75, 0.0 ); // Let OpenGL clear to black
-glEnable( GL_CULL_FACE );  	// don't need Z testing for convex objects
-glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+//glEnable( GL_CULL_FACE );  	// don't need Z testing for convex objects
+//if(state == 10){
+    //glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+//}else{
 
+//     glOrtho(0, 1.6, 0, 1.6, 0.001f, 100);
+//     glLoadIdentity();
+//}
+ //glHint( GL_2D, GL_NICEST );
 // No display list in this simple version
 //object = makeDice( );	// Generate an OpenGL display list
 }
@@ -114,10 +122,10 @@ void GLWidget::paintGL()
     glClear( GL_COLOR_BUFFER_BIT );
 
     glLoadIdentity();
-    gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, 0.0, 1.0, 0.0);
+    gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, upX, upY, upZ);
    // glTranslatef( 0.0, 0.0, -10.0 );
    // glScalef( scale, scale, scale );
-
+    //glOrtho();
    // glCallList( object );   no display list this version just make the cube
     makeGround();
     makeAxes();
@@ -131,7 +139,11 @@ void GLWidget::resizeGL( int w, int h )
     glViewport( 0, 0, (GLint)w, (GLint)h );
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glFrustum( -1.0, 1.0, -1.0, 1.0, 5.0, 1500.0 );
+    if(state == 0){
+        glFrustum( -1.0, 1.0, -1.0, 1.0, 5.0, 1500.0 );
+    }else{
+        glOrtho(-4.0, 4.0, -4.0, 4.0, 10, 11.6);
+    }
     glMatrixMode( GL_MODELVIEW );
 }
 
@@ -204,6 +216,37 @@ void GLWidget::help()
     QMessageBox::information( this, title, mess, QMessageBox::Ok );
 }
 
+void GLWidget::setState(int s)
+{
+    xto = yto = zto = 0;
+    state = s;
+    if(state == 0)
+    {
+        upX = 0; upY = 1; upZ = 0;
+        yfrom = 10;
+        xfrom = 10;
+        zfrom = 10;
+    }else if(state == 1){
+        upX = 0; upY = 0; upZ = -1;
+        xfrom = 0;
+        yfrom = 10;
+        zfrom = 0;
+    }else if(state == 2)
+    {
+        upX = 0; upY = 1; upZ = 0;
+        xfrom = 10;
+        yfrom = 0;
+        zfrom = 0;
+    }else if(state == 3)
+    {
+        upX = 0; upY = 1; upZ = 0;
+        xfrom = 0;
+        yfrom = 0;
+        zfrom = 10;
+    }
+    resizeGL(794,603);
+    updateGL();
+}
 
 
 
@@ -259,8 +302,7 @@ GLuint GLWidget::makeDice()
     glLineWidth(4);
 
     drawFace(0,  w);
-
-    // six
+// six
     glPushMatrix();
     glRotatef( 180.0, 1.0, 0.0, 0.0 );
     drawFace(5, w);
@@ -289,8 +331,7 @@ GLuint GLWidget::makeDice()
     glRotatef( -90.0, 1.0, 0.0, 0.0 );
     drawFace(4, w);
     glPopMatrix();
-
-  //  glEndList();
+    glEndList();
 
   //  return list;
     return 0;
@@ -335,22 +376,19 @@ void GLWidget::makeGround(void)
 void GLWidget::makeAxes()
 {
     glLineWidth(4);
-   // GLfloat lSizes[4];
     glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
-
     //x
-    glVertex3f(-1.0,-0.8,-1.0);
-    glVertex3f(3,-0.8,-1.0);
+    glVertex3f(0.0,0.0,0.0);
+    glVertex3f(3.0,0.0,0.0);
 
     //y
-    glVertex3f(-1.0,-0.8,-1.0);
-    glVertex3f(-1.0,3.2,-1.0);
+    glVertex3f(0.0,0.0,0.0);
+    glVertex3f(0.0,3.0,0.0);
 
     //z
-    glVertex3f(-1.0,-0.8,-1.0);
-    glVertex3f(-1.0,-0.8,3.0);
-
+    glVertex3f(0.0,0.0,0.0);
+    glVertex3f(0.0,0.0,3.0);
     glEnd();
 
 }
@@ -418,14 +456,15 @@ void GLWidget::makeSpots(int tim, QImage *buf)
   }
 }
 
-void GLWidget::drawCircle(int radius, int xcen, int ycen,  QImage *buf)
+
+void GLWidget::drawCircle(int radiu, int xcen, int ycen,  QImage *buf)
 {
   int i,j,r2;
 
-  r2=radius*radius;
+  r2=radiu*radiu;
 
-  for(i=xcen-radius; i<xcen+radius; i++)
-    for(j=ycen-radius; j<ycen+radius; j++) {
+  for(i=xcen-radiu; i<xcen+radiu; i++)
+    for(j=ycen-radiu; j<ycen+radiu; j++) {
       if  ( (i-xcen)*(i-xcen) + (j-ycen)*(j-ycen) < r2)
         buf->setPixel(i,j,qRgb(255, 255, 255));
    }
@@ -517,33 +556,59 @@ void GLWidget::mouseReleaseEvent( QMouseEvent *e)
 void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 {
     button =  e->button();
+    int mouseX = e->x();
+    int mouseY = e->y();
+    int mouseZ = e->y();
 
-    if(left)
-    {
-        int mouseX = e->x();
-        int mouseY = e->y();
+    if(state == 0){             //perspective view
+        if(left)
+        {
+            angleX = angleX + (mouseX - mClickLocationX)/10.0;
+            angleY = angleY + (mouseY - mClickLocationY)/10.0;
+            xfrom = radius * cos(angleY)*cos(angleX);
+            yfrom = radius * sin(angleY);
+            zfrom = xfrom*tan(angleX);
+        }
+        else if(right){
+            radius = radius + (mouseZ - mClickLocationZ)/10.0;
+            yfrom = radius * sin(angleY);
+            xfrom = radius * cos(angleY)*cos(angleX);
+            zfrom = xfrom * tan(angleX);
 
-        angleX = angleX + (mouseX - mClickLocationX)/10.0;
-        angleY = angleY + (mouseY - mClickLocationY)/10.0;
-        xfrom = radius * cos(angleY)*cos(angleX);
-        yfrom = radius * sin(angleY);
-        zfrom = xfrom*tan(angleX);
+            mClickLocationZ = mouseZ;
 
-        mClickLocationX = mouseX;
-        mClickLocationY = mouseY;
+        }
 
+    }else if(state == 1){    //top view
+        if(left)
+        {
+            yfrom = 10;
+            yto = 0;
+            zto = zfrom = zfrom - (mouseY - mClickLocationY)/10.0;
+            xto = xfrom = xfrom + (mouseX - mClickLocationX)/10.0;
+        }
+    }else if(state == 2){
+        if(left)
+        {
+            xfrom = 10;
+            xto = 0;
+            zto = zfrom = zfrom - (mouseX - mClickLocationX)/10.0;
+            yto = yfrom = yfrom+ (mouseY - mClickLocationY)/10.0;
+        }
 
-    }else if(right){
-
-        int mouseZ = e->y();              
-        radius = radius + (mouseZ - mClickLocationZ)/10.0;
-        yfrom = radius * sin(angleY);
-        xfrom = radius * cos(angleY)*cos(angleX);
-        zfrom = xfrom * tan(angleX);
-
-        mClickLocationZ = mouseZ;
-
+    }else if(state == 3){
+        if(left){
+            zfrom = 10;
+            zto = 0;
+            xto = xfrom = xfrom + (mouseX - mClickLocationX)/10.0;
+            yto = yfrom = yfrom + (mouseY - mClickLocationY)/10.0;
+        }
     }
+
+
+
+    mClickLocationX = mouseX;
+    mClickLocationY = mouseY;
 
 
     updateGL();
@@ -555,3 +620,29 @@ void GLWidget::setFilled(bool a)
     filled=a;
     updateGL();
 }
+
+void GLWidget::setCameraPosition()
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

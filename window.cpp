@@ -26,6 +26,7 @@ Window::Window(QWidget *parent):QDialog(parent)
     //We need to attach our m_glWidget to glWidgetArea
     //All our drawings will be on glWidgetArea
     glWidgetArea->setWidget(m_glWidget);
+
 }
 
 void Window::resizeEvent( QResizeEvent * )
@@ -86,5 +87,25 @@ void Window::zFrom(int a)
 void Window::filledOn(bool a)
 {
     m_glWidget->setFilled(a);
+}
+
+void Window::pView()
+{
+    m_glWidget->setState(0);
+}
+
+void Window::tView()
+{
+     m_glWidget->setState(1);
+}
+
+void Window::rView()
+{
+     m_glWidget->setState(2);
+}
+
+void Window::fView()
+{
+     m_glWidget->setState(3);
 }
 
