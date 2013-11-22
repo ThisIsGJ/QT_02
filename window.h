@@ -28,7 +28,7 @@ private:
 
     private slots:
 
-        void endit(){cerr << "goodbye\n"; exit(0);};
+        void endit(){cerr << "goodbye\n"; exit(0);}
         void clear();
         void aboutBut();
         void helpBut();
@@ -42,6 +42,10 @@ private:
         void yFrom(int);
         void zFrom(int);
         void filledOn(bool);
+        void tView();
+        void pView();
+        void fView();
+        void rView();
 
 protected:
          void  resizeEvent(QResizeEvent * );

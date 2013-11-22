@@ -32,6 +32,7 @@ public:
     //Destructor for GLWidget
     ~GLWidget();
 
+
     void clear();
     void about();
     void help();
@@ -42,6 +43,7 @@ public:
     void setyFrom(int a);
     void setzFrom(int a);
     void setFilled(bool a);
+    void setState(int s);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -84,6 +86,10 @@ private:
     int pointNumber;
     QList<QList<double> > pointAll;
     QList<double> point;
+    int state;
+    int upX;
+    int upY;
+    int upZ;
 
 
 
@@ -99,7 +105,7 @@ private:
     void makeAxes();
     void setViewPoint();
     void getViewPoint();
-
+    void setCameraPosition();
 };
 
 
