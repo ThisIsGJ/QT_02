@@ -44,10 +44,10 @@ void GLWidget::startup()
     scale = 1.5;
     object =0; // in this version no display list
     xfrom=yfrom=zfrom=10.0;
-    radius = qSqrt(300);
+    radius = sqrt(300);
     xto=yto=zto=0.0;
     angleX = atan(1);
-    angleY = atan(1/sqrt(50));
+    angleY = atan(10/sqrt(200));
     filled=false;
     upX = 0;
     upY = 1;
@@ -220,8 +220,12 @@ void GLWidget::setState(int s)
 {
     xto = yto = zto = 0;
     state = s;
+
     if(state == 0)
     {
+        angleX = atan(1);
+        angleY = atan(1/sqrt(50));
+        radius = sqrt(300);
         upX = 0; upY = 1; upZ = 0;
         yfrom = 10;
         xfrom = 10;
@@ -563,18 +567,18 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
     if(state == 0){             //perspective view
         if(left)
         {
-            angleX = angleX + (mouseX - mClickLocationX)/10.0;
-            angleY = angleY + (mouseY - mClickLocationY)/10.0;
+            angleX = angleX + (mouseX - mClickLocationX)/20.0;
+            angleY = angleY + (mouseY - mClickLocationY)/20.0;
             xfrom = radius * cos(angleY)*cos(angleX);
             yfrom = radius * sin(angleY);
             zfrom = xfrom*tan(angleX);
         }
         else if(right){
-            radius = radius + (mouseZ - mClickLocationZ)/10.0;
+
+            radius = radius + (mouseZ - mClickLocationZ)/20.0;
             yfrom = radius * sin(angleY);
             xfrom = radius * cos(angleY)*cos(angleX);
-            zfrom = xfrom * tan(angleX);
-
+            zfrom = xfrom * tan(angleX);            
             mClickLocationZ = mouseZ;
 
         }
@@ -584,24 +588,24 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
         {
             yfrom = 10;
             yto = 0;
-            zto = zfrom = zfrom - (mouseY - mClickLocationY)/10.0;
-            xto = xfrom = xfrom + (mouseX - mClickLocationX)/10.0;
+            zto = zfrom = zfrom - (mouseY - mClickLocationY)/20.0;
+            xto = xfrom = xfrom + (mouseX - mClickLocationX)/20.0;
         }
     }else if(state == 2){
         if(left)
         {
             xfrom = 10;
             xto = 0;
-            zto = zfrom = zfrom - (mouseX - mClickLocationX)/10.0;
-            yto = yfrom = yfrom+ (mouseY - mClickLocationY)/10.0;
+            zto = zfrom = zfrom - (mouseX - mClickLocationX)/20.0;
+            yto = yfrom = yfrom+ (mouseY - mClickLocationY)/20.0;
         }
 
     }else if(state == 3){
         if(left){
             zfrom = 10;
             zto = 0;
-            xto = xfrom = xfrom + (mouseX - mClickLocationX)/10.0;
-            yto = yfrom = yfrom + (mouseY - mClickLocationY)/10.0;
+            xto = xfrom = xfrom + (mouseX - mClickLocationX)/20.0;
+            yto = yfrom = yfrom + (mouseY - mClickLocationY)/20.0;
         }
     }
 
