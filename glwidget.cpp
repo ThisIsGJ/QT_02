@@ -101,7 +101,7 @@ glEnable( GL_TEXTURE_2D );
 glClearColor( 0.5, 1.0, 0.75, 0.0 ); // Let OpenGL clear to black
 //glEnable( GL_CULL_FACE );  	// don't need Z testing for convex objects
 //if(state == 10){
-    //glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 //}else{
 
 //     glOrtho(0, 1.6, 0, 1.6, 0.001f, 100);
@@ -142,7 +142,7 @@ void GLWidget::resizeGL( int w, int h )
     if(state == 0){
         glFrustum( -1.0, 1.0, -1.0, 1.0, 5.0, 1500.0 );
     }else{
-        glOrtho(-4.0, 4.0, -4.0, 4.0, 10, 11.6);
+        glOrtho(-4.0, 4.0, -4.0, 4.0, 5.0, 1000.0);
     }
     glMatrixMode( GL_MODELVIEW );
 }
@@ -281,7 +281,7 @@ void GLWidget::initLight()
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
 
-   //   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_DEPTH_TEST);
    //   glDisable(GL_LIGHTING);
 
 }
