@@ -256,7 +256,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>240</y>
+        <y>250</y>
         <width>151</width>
         <height>32</height>
        </rect>
@@ -269,7 +269,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
+        <y>280</y>
         <width>151</width>
         <height>32</height>
        </rect>
@@ -282,13 +282,26 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
+        <y>310</y>
         <width>151</width>
         <height>32</height>
        </rect>
       </property>
       <property name="text">
        <string>front view</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>340</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>delete point</string>
       </property>
      </widget>
     </widget>

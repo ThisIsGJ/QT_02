@@ -85,13 +85,12 @@ private:
     bool right;
     int pointNumber;
     QList<QList<double> > pointAll;
+    QList<QList<double> > controlPoint;
     QList<double> point;
     int state;
     int upX;
     int upY;
     int upZ;
-
-
 
 
     // Functions
@@ -106,7 +105,7 @@ private:
     void setViewPoint();
     void getViewPoint();
     void setCameraPosition();
-    void setPoint(int i);
+    void setPoint();
 };
 
 

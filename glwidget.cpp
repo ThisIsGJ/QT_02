@@ -130,7 +130,7 @@ void GLWidget::paintGL()
     makeGround();
     makeAxes();
     makeDice();
-
+    setPoint();
 }
 
 /* 2D */
@@ -181,7 +181,7 @@ void GLWidget::setViewPoint()
     point.clear();
     point.append(0.8);
     point.append(0.8);
-    point.append(0);
+    point.append(0);    
     pointAll.append(point);
 
 }
@@ -524,8 +524,15 @@ void GLWidget::getViewPoint()
     zto = pointAll[pointNumber][2];
 }
 
-void GLWidget::setPoint(int i){
-
+void GLWidget::setPoint(){
+    glColor3f(0,0,1);
+    glPointSize(20);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < controlPoint.size(); i++)
+    {
+        glVertex3f(controlPoint[i][0],controlPoint[i][1],controlPoint[i][2]);
+    }
+    glEnd();
 
 }
 
@@ -550,9 +557,28 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     {
         getViewPoint();
     }
-    if(button == Qt::RightButton){
-        if(state == 1){
-            setPoint(1);
+    if(state != 0){
+        if(button == Qt::RightButton){
+            if(state == 1){
+                point.clear();
+                point.append((e->x()-284)/71.25);
+                point.append(0);
+                point.append((e->y()-255)/63.75);
+                controlPoint.append(point);
+            }else if(state == 2){
+                point.clear();
+                point.append(0);
+                point.append(-(e->y()-255)/63.75);
+                point.append(-(e->x()-284)/71.25);
+                controlPoint.append(point);
+            }else{
+                point.clear();
+                point.append((e->x()-284)/71.25);
+                point.append(-(e->y()-255)/63.75);
+                point.append(0);
+                controlPoint.append(point);
+            }
+
         }
     }
     updateGL();
@@ -591,7 +617,9 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 
         }
 
-    }else if(state == 1){    //top view
+    }
+    /*
+    else if(state == 1){    //top view
         if(left)
         {
             yfrom = 10;
@@ -616,7 +644,7 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
             yto = yfrom = yfrom + (mouseY - mClickLocationY)/20.0;
         }
     }
-
+    */
 
 
     mClickLocationX = mouseX;
@@ -633,10 +661,6 @@ void GLWidget::setFilled(bool a)
     updateGL();
 }
 
-void GLWidget::setCameraPosition()
-{
-
-}
 
 
 
