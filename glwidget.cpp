@@ -224,7 +224,7 @@ void GLWidget::setState(int s)
     if(state == 0)
     {
         angleX = atan(1);
-        angleY = atan(1/sqrt(50));
+        angleY = atan(10/sqrt(200));
         radius = sqrt(300);
         upX = 0; upY = 1; upZ = 0;
         yfrom = 10;
@@ -524,6 +524,10 @@ void GLWidget::getViewPoint()
     zto = pointAll[pointNumber][2];
 }
 
+void GLWidget::setPoint(int i){
+
+
+}
 
 // mouse routines for camera control to be implemented
 void GLWidget::mousePressEvent( QMouseEvent *e )
@@ -546,7 +550,11 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     {
         getViewPoint();
     }
-
+    if(button == Qt::RightButton){
+        if(state == 1){
+            setPoint(1);
+        }
+    }
     updateGL();
 }
 

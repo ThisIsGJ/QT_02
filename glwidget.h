@@ -106,6 +106,7 @@ private:
     void setViewPoint();
     void getViewPoint();
     void setCameraPosition();
+    void setPoint(int i);
 };
 
 
