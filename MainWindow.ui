@@ -229,8 +229,8 @@
      <widget class="QRadioButton" name="radioButton">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>410</y>
+        <x>50</x>
+        <y>400</y>
         <width>61</width>
         <height>20</height>
        </rect>
@@ -493,8 +493,8 @@
    <slot>filledOn(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>482</y>
+     <x>96</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -541,8 +541,8 @@
    <slot>rView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>166</x>
-     <y>331</y>
+     <x>172</x>
+     <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>192</x>
@@ -557,12 +557,28 @@
    <slot>fView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>163</x>
-     <y>350</y>
+     <x>172</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
      <x>188</x>
      <y>446</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>frmMain</receiver>
+   <slot>dPoint()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>409</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>187</x>
+     <y>480</y>
     </hint>
    </hints>
   </connection>
@@ -580,5 +596,6 @@
   <slot>tView()</slot>
   <slot>rView()</slot>
   <slot>fView()</slot>
+  <slot>dPoint()</slot>
  </slots>
 </ui>

@@ -46,6 +46,7 @@ private:
         void pView();
         void fView();
         void rView();
+        void dPoint();
 
 protected:
          void  resizeEvent(QResizeEvent * );

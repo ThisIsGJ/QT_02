@@ -44,6 +44,7 @@ public:
     void setzFrom(int a);
     void setFilled(bool a);
     void setState(int s);
+    void deletePoint();
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -83,6 +84,7 @@ private:
     int mClickLocationZ;
     bool left;
     bool right;
+    float mouseSpeed;
     int pointNumber;
     QList<QList<double> > pointAll;
     QList<QList<double> > controlPoint;
@@ -91,12 +93,14 @@ private:
     int upX;
     int upY;
     int upZ;
+    bool movePoint;
+    int theMovePoint;
 
 
     // Functions
     void redraw();
-    void makeSpots(int tim, QImage *buf);
-    void drawCircle(int radius, int xcen, int ycen,  QImage *buf);
+   // void makeSpots(int tim, QImage *buf);
+    //void drawCircle(int radius, int xcen, int ycen,  QImage *buf);
     void drawFace( int tim, float w);
     GLuint makeDice();
     void initLight();

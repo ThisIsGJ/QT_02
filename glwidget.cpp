@@ -20,8 +20,7 @@ GLWidget::GLWidget(QWidget *parent)
       mClickLocationZ(0),
       left(false),
       right(false),
-      angleX(0),
-      angleY(0),
+      mouseSpeed(1/100.0),
       pointNumber(0),
       state(0)
 {
@@ -53,6 +52,8 @@ void GLWidget::startup()
     upY = 1;
     upZ = 0;
     setViewPoint();
+    movePoint = false;
+    theMovePoint = -1;
 }
 
 void GLWidget::clear()
@@ -397,7 +398,7 @@ void GLWidget::makeAxes()
 
 }
 
-
+/*
 void GLWidget::makeSpots(int tim, QImage *buf)
 {
   int r=255, g=0, b=0;
@@ -460,7 +461,6 @@ void GLWidget::makeSpots(int tim, QImage *buf)
   }
 }
 
-
 void GLWidget::drawCircle(int radiu, int xcen, int ycen,  QImage *buf)
 {
   int i,j,r2;
@@ -472,7 +472,7 @@ void GLWidget::drawCircle(int radiu, int xcen, int ycen,  QImage *buf)
       if  ( (i-xcen)*(i-xcen) + (j-ycen)*(j-ycen) < r2)
         buf->setPixel(i,j,qRgb(255, 255, 255));
    }
-}
+}*/
 
 // communication with the window widget
 void GLWidget::rotx(int a)
@@ -525,16 +525,35 @@ void GLWidget::getViewPoint()
 }
 
 void GLWidget::setPoint(){
+
     glColor3f(0,0,1);
     glPointSize(20);
     glBegin(GL_POINTS);
     for(int i = 0; i < controlPoint.size(); i++)
     {
-        glVertex3f(controlPoint[i][0],controlPoint[i][1],controlPoint[i][2]);
+        if(i == theMovePoint){
+            glColor3f(1,0,0);
+            glVertex3f(controlPoint[i][0],controlPoint[i][1],controlPoint[i][2]);
+        }else{
+            glColor3f(0,0,1);
+            glVertex3f(controlPoint[i][0],controlPoint[i][1],controlPoint[i][2]);
+        }
     }
     glEnd();
 
 }
+
+void GLWidget::deletePoint()
+{
+    if(theMovePoint != -1)
+    {
+        controlPoint.removeAt(theMovePoint);
+        theMovePoint = -1;
+        updateGL();
+    }
+}
+
+
 
 // mouse routines for camera control to be implemented
 void GLWidget::mousePressEvent( QMouseEvent *e )
@@ -542,22 +561,26 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
 
  /*   if (df->getPan()) dopan(e->x(), height()-e->y() , true);
     else {*/
-
+    double testX = 0;
+    double testY = 0;
+    double testZ = 0;
     button =  e->button();
-    if (button == Qt::LeftButton) {
+    if(state == 0){
+        if (button == Qt::LeftButton) {
 
-        left = true;
-        mClickLocationX = e->x();
-        mClickLocationY = e->y();
+            left = true;
+            mClickLocationX = e->x();
+            mClickLocationY = e->y();
 
-    }else if(button == Qt::RightButton){
-        right = true;
-        mClickLocationZ = e->y();
-    }else if(button == Qt::MidButton)
-    {
-        getViewPoint();
+        }else if(button == Qt::RightButton){
+            right = true;
+            mClickLocationZ = e->y();
+        }else if(button == Qt::MidButton)
+        {
+            getViewPoint();
+        }
     }
-    if(state != 0){
+    else{
         if(button == Qt::RightButton){
             if(state == 1){
                 point.clear();
@@ -579,6 +602,44 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
                 controlPoint.append(point);
             }
 
+        }else if(button == Qt::LeftButton){
+            mClickLocationX = e->x();
+            mClickLocationY = e->y();
+            if(state == 1){
+                testX = (e->x()-284)/71.25;
+                testZ = (e->y()-255)/63.75;
+                for(int i = 0; i < controlPoint.size(); i++) //0.14 is length of the cube's sides
+                {
+                    if( (controlPoint[i][0] - 0.14 <= testX) && (testX <= controlPoint[i][0] + 0.14)&&
+                            (controlPoint[i][2] - 0.14 <= testZ) && (testZ <= controlPoint[i][2] + 0.14)){
+                        movePoint = true;
+                        theMovePoint = i;
+                    }
+                }
+            }else if(state == 2){
+                testY = -(e->y()-255)/63.75;
+                testZ = -(e->x()-284)/71.25;
+                for(int i = 0; i < controlPoint.size(); i++) //0.14 is length of the cube's sides
+                {
+                    if((controlPoint[i][1] - 0.14 <= testY)&& (testY <= controlPoint[i][1] + 0.14) &&
+                            (controlPoint[i][2] - 0.14 <= testZ) && (testZ <= controlPoint[i][2] + 0.14)){
+                        movePoint = true;
+                        theMovePoint = i;
+                    }
+                }
+            }else if(state == 3){
+                testX = (e->x()-284)/71.25;
+                testY = -(e->y()-255)/63.75;
+                for(int i = 0; i < controlPoint.size(); i++) //0.14 is length of the cube's sides
+                {
+                    if( (controlPoint[i][0] - 0.14 <= testX) && (testX <= controlPoint[i][0] + 0.14) && (controlPoint[i][1] - 0.14 <= testY)
+                            && (testY <= controlPoint[i][1] + 0.14)){
+                        movePoint = true;
+                        theMovePoint = i;
+                    }
+                }
+            }
+
         }
     }
     updateGL();
@@ -588,6 +649,7 @@ void GLWidget::mouseReleaseEvent( QMouseEvent *e)
 {
     if(left){ left = false;}
     if(right){right = false;}
+    movePoint = false;
     updateGL();
 }
 
@@ -601,15 +663,15 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
     if(state == 0){             //perspective view
         if(left)
         {
-            angleX = angleX + (mouseX - mClickLocationX)/20.0;
-            angleY = angleY + (mouseY - mClickLocationY)/20.0;
+            angleX = angleX + (mouseX - mClickLocationX)*mouseSpeed;
+            angleY = angleY + (mouseY - mClickLocationY)*mouseSpeed;
             xfrom = radius * cos(angleY)*cos(angleX);
             yfrom = radius * sin(angleY);
             zfrom = xfrom*tan(angleX);
         }
         else if(right){
 
-            radius = radius + (mouseZ - mClickLocationZ)/20.0;
+            radius = radius + (mouseZ - mClickLocationZ)*mouseSpeed;
             yfrom = radius * sin(angleY);
             xfrom = radius * cos(angleY)*cos(angleX);
             zfrom = xfrom * tan(angleX);            
@@ -617,6 +679,21 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 
         }
 
+    }else{
+        if(movePoint){
+            if(state == 1)
+            {
+                controlPoint[theMovePoint][0] =  controlPoint[theMovePoint][0]  + (mouseX - mClickLocationX)/71.25;
+                controlPoint[theMovePoint][2] = controlPoint[theMovePoint][2] +  (mouseY - mClickLocationY)/63.75;
+            }else if(state == 2)
+            {
+                controlPoint[theMovePoint][1] =  controlPoint[theMovePoint][1]  - (mouseY - mClickLocationY)/63.75;
+                controlPoint[theMovePoint][2] = controlPoint[theMovePoint][2] -  (mouseX - mClickLocationX)/71.25;
+            }else if( state == 3){
+                controlPoint[theMovePoint][0] =  controlPoint[theMovePoint][0]  + (mouseX - mClickLocationX)/71.25;
+                controlPoint[theMovePoint][1] = controlPoint[theMovePoint][1] -  (mouseY - mClickLocationY)/63.75;
+            }
+        }
     }
     /*
     else if(state == 1){    //top view

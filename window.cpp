@@ -109,3 +109,19 @@ void Window::fView()
      m_glWidget->setState(3);
 }
 
+void Window::dPoint()
+{
+    m_glWidget->deletePoint();
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -39,7 +39,6 @@ typedef int bool;
 #include <qfiledialog.h>
 
 
-
 //const  double   M_PI = 3.1415925;
 const  double pib5 = M_PI/5.0;
 const  double torr = sin (2.0*pib5) / sin(pib5);
