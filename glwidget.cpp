@@ -132,6 +132,7 @@ void GLWidget::paintGL()
     makeAxes();
     makeDice();
     setPoint();
+    drawCatmullRoom();
 }
 
 /* 2D */
@@ -553,6 +554,41 @@ void GLWidget::deletePoint()
     }
 }
 
+
+void GLWidget::drawCatmullRoom()
+{
+    float px,py,pz;
+
+
+    if(controlPoint.size() > 3)
+    {
+        glPointSize(10);
+        glColor3f(0,1,0);
+        glBegin(GL_LINE_STRIP);
+
+        for(int i = 1; i < controlPoint.size()-2; i++)
+                {
+                    for(int j = 0;  j < 100; j++){
+                        float t = j*0.01;
+                        px = controlPoint[i][0] + 0.5*t*(-controlPoint[i-1][0]+controlPoint[i+1][0])
+                                + t*t*(controlPoint[i-1][0] - 2.5*controlPoint[i][0] + 2*controlPoint[i+1][0] - 0.5*controlPoint[i+2][0])
+                                + t*t*t*(-0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0]);
+
+                        py = controlPoint[i][1] + 0.5*t*(-controlPoint[i-1][1]+controlPoint[i+1][1])
+                                + t*t*(controlPoint[i-1][1] - 2.5*controlPoint[i][1] + 2*controlPoint[i+1][1] - 0.5*controlPoint[i+2][1])
+                                + t*t*t*(-0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1]);
+
+                        pz = controlPoint[i][2] + 0.5*t*(-controlPoint[i-1][2]+controlPoint[i+1][2])
+                                + t*t*(controlPoint[i-1][2] - 2.5*controlPoint[i][2] + 2*controlPoint[i+1][2] - 0.5*controlPoint[i+2][2])
+                                + t*t*t*(-0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2]);
+
+                        glVertex3f(px,py,pz);
+                        }
+
+                 }
+        glEnd();
+    }
+}
 
 
 // mouse routines for camera control to be implemented
