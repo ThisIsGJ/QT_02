@@ -110,6 +110,7 @@ private:
     void getViewPoint();
     void setCameraPosition();
     void setPoint();
+    void drawCatmullRoom();
 };
 
 
