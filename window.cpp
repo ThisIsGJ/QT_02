@@ -115,12 +115,15 @@ void Window::dPoint()
 }
 
 
+void Window::cleanPoint()
+{
+    m_glWidget->cleanAllPoint();
+}
 
-
-
-
-
-
+void Window::moveFrenetFrame(int t)
+{
+    m_glWidget->frenetFrameMove(t);
+}
 
 
 

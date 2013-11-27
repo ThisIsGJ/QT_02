@@ -47,6 +47,8 @@ private:
         void fView();
         void rView();
         void dPoint();
+        void cleanPoint();
+        void moveFrenetFrame(int);
 
 protected:
          void  resizeEvent(QResizeEvent * );
