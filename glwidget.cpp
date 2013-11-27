@@ -601,10 +601,10 @@ void GLWidget::drawCatmullRoom()
 
 void GLWidget::frenetFrameMove(int time)
 {
+     qDebug() << time;
     double unitT = 100/(controlPoint.size()-3);
     if(controlPoint.size() > 3){
-        if(time < 99){
-
+        if(time != 0){
             if(time > testID){//decrease
                 testID = time;
                 time = time - (theNumberOfcp-1)*unitT;
@@ -623,10 +623,9 @@ void GLWidget::frenetFrameMove(int time)
 
             tPosition = time*(1/unitT);
             drawFrenet = true;
-
-
+        }else{
+            drawFrenet = false;
         }
-
     }
     updateGL();
 }

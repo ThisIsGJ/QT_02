@@ -47,6 +47,7 @@ public:
     void deletePoint();
     void cleanAllPoint();
     void frenetFrameMove(int);
+    bool drawFrenet;
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -100,7 +101,6 @@ private:
     int theNumberOfcp; //the number the control point
     double tOfFrenet;
     double Ax,Ay,Az,Bx,By,Bz,Cx,Cy,Cz,Dx,Dy,Dz,Vx,Vy,Vz,Qx,Qy,Qz,tPosition;
-    bool drawFrenet;
     int testID;
 
 
