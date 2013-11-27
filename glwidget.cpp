@@ -4,6 +4,7 @@
 
 #include "glwidget.h"
 #include <QtCore/qmath.h>
+#include <QVector>
 #include <QtMath>
 #include <QList>
 
@@ -54,6 +55,8 @@ void GLWidget::startup()
     setViewPoint();
     movePoint = false;
     theMovePoint = -1;
+    theNumberOfcp = 0;
+    tOfFrenet = 0;
 }
 
 void GLWidget::clear()
@@ -557,38 +560,112 @@ void GLWidget::deletePoint()
 
 void GLWidget::drawCatmullRoom()
 {
-    float px,py,pz;
+    float px,py,pz,fx,fy,fz;
 
 
     if(controlPoint.size() > 3)
     {
         glPointSize(10);
-        glColor3f(0,1,0);
+        glColor3f(0,0,0);
         glBegin(GL_LINE_STRIP);
 
         for(int i = 1; i < controlPoint.size()-2; i++)
                 {
                     for(int j = 0;  j < 100; j++){
                         float t = j*0.01;
-                        px = controlPoint[i][0] + 0.5*t*(-controlPoint[i-1][0]+controlPoint[i+1][0])
+                        px = controlPoint[i][0]
+                                + 0.5*t*(-controlPoint[i-1][0]+controlPoint[i+1][0])
                                 + t*t*(controlPoint[i-1][0] - 2.5*controlPoint[i][0] + 2*controlPoint[i+1][0] - 0.5*controlPoint[i+2][0])
                                 + t*t*t*(-0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0]);
 
-                        py = controlPoint[i][1] + 0.5*t*(-controlPoint[i-1][1]+controlPoint[i+1][1])
+                        py = controlPoint[i][1]
+                                + 0.5*t*(-controlPoint[i-1][1]+controlPoint[i+1][1])
                                 + t*t*(controlPoint[i-1][1] - 2.5*controlPoint[i][1] + 2*controlPoint[i+1][1] - 0.5*controlPoint[i+2][1])
                                 + t*t*t*(-0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1]);
 
-                        pz = controlPoint[i][2] + 0.5*t*(-controlPoint[i-1][2]+controlPoint[i+1][2])
+                        pz = controlPoint[i][2]
+                                + 0.5*t*(-controlPoint[i-1][2]+controlPoint[i+1][2])
                                 + t*t*(controlPoint[i-1][2] - 2.5*controlPoint[i][2] + 2*controlPoint[i+1][2] - 0.5*controlPoint[i+2][2])
                                 + t*t*t*(-0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2]);
 
                         glVertex3f(px,py,pz);
-                        }
 
+                        }
                  }
+         glEnd();
+
+         glBegin(GL_LINES);
+         for(int i = 1; i < controlPoint.size()-2; i++)
+                 {
+                     for(int j = 0;  j < 100; j++){
+                         float t = 0.5;
+                         float Ax = -0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0];
+                         float Ay = -0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1];
+                         float Az = -0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2];
+                         float Bx = controlPoint[i-1][0] - 2.5*controlPoint[i][0] + 2*controlPoint[i+1][0] - 0.5*controlPoint[i+2][0];
+                         float By = controlPoint[i-1][1] - 2.5*controlPoint[i][1] + 2*controlPoint[i+1][1] - 0.5*controlPoint[i+2][1];
+                         float Bz = controlPoint[i-1][2] - 2.5*controlPoint[i][2] + 2*controlPoint[i+1][2] - 0.5*controlPoint[i+2][2];
+                         float Cx = 0.5*(-controlPoint[i-1][0]+controlPoint[i+1][0]);
+                         float Cy = 0.5*(-controlPoint[i-1][1]+controlPoint[i+1][1]);
+                         float Cz = 0.5*(-controlPoint[i-1][2]+controlPoint[i+1][2]);
+                         float Dx = controlPoint[i][0];
+                         float Dy = controlPoint[i][1];
+                         float Dz = controlPoint[i][2];
+                         //tangent
+                         float Vx = 3*Ax*t*t + 2*Bx*t +Cx;
+                         float Vy = 3*Ay*t*t + 2*By*t +Cy;
+                         float Vz = 3*Az*t*t + 2*Bz*t +Cz;
+                        //Q ACCELERATION
+                         float Qx = 6*Ax+2*Bx;
+                         float Qy = 6*Ay+2*By;
+                         float Qz = 6*Az+2*Bz;
+
+                         px = Dx + t*Cx + t*t*Bx + t*t*t*Ax;
+                         py = Dy + t*Cy + t*t*By + t*t*t*Ay;
+                         pz = Dz + t*Cz + t*t*Bz + t*t*t*Az;
+
+                         //tangent
+                         fx = Vx;
+                         fy = Vy;
+                         fz = Vz;
+
+                         glVertex3f(px,py,pz);
+                         glVertex3f(px+fx,py+fy,pz+fz);
+
+
+                         fx = (Vy*Qz - Vz*Qy);
+                         fy = -(Vx*Qz-Vz*Qx);
+                         fz = (Vx*Qy - Vy*Qx);
+
+                         glVertex3f(px,py,pz);
+                         glVertex3f(px+fx,py+fy,pz+fz);
+
+                         fx = -(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy;
+                         fy = -((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx);
+                         fz = (Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx;
+
+                         glVertex3f(px,py,pz);
+                         glVertex3f(px+fx,py+fy,pz+fz);
+
+                         }
+                  }
         glEnd();
+
     }
 }
+
+void GLWidget::frenetFrameMove(int t)
+{
+    qDebug() << t;
+}
+
+void GLWidget::drawFrenetFrame()
+{
+
+
+
+}
+
 
 
 // mouse routines for camera control to be implemented
@@ -686,7 +763,7 @@ void GLWidget::mouseReleaseEvent( QMouseEvent *e)
     if(left){ left = false;}
     if(right){right = false;}
     movePoint = false;
-    updateGL();
+    //updateGL();
 }
 
 void GLWidget::mouseMoveEvent ( QMouseEvent *e )
@@ -775,6 +852,11 @@ void GLWidget::setFilled(bool a)
 }
 
 
+void GLWidget::cleanAllPoint()
+{
+    controlPoint.clear();
+    updateGL();
+}
 
 
 

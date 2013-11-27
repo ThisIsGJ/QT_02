@@ -45,6 +45,8 @@ public:
     void setFilled(bool a);
     void setState(int s);
     void deletePoint();
+    void cleanAllPoint();
+    void frenetFrameMove(int);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -95,6 +97,8 @@ private:
     int upZ;
     bool movePoint;
     int theMovePoint;
+    int theNumberOfcp;
+    double tOfFrenet;
 
 
     // Functions
@@ -111,6 +115,7 @@ private:
     void setCameraPosition();
     void setPoint();
     void drawCatmullRoom();
+    void drawFrenetFrame();
 };
 
 
