@@ -101,6 +101,7 @@ private:
     double tOfFrenet;
     double Ax,Ay,Az,Bx,By,Bz,Cx,Cy,Cz,Dx,Dy,Dz,Vx,Vy,Vz,Qx,Qy,Qz,tPosition;
     bool drawFrenet;
+    int testID;
 
 
     // Functions

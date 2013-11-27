@@ -58,6 +58,7 @@ void GLWidget::startup()
     setViewPoint();
     movePoint = false;
     theMovePoint = -1;
+    testID = 0;
 }
 
 void GLWidget::clear()
@@ -602,24 +603,30 @@ void GLWidget::frenetFrameMove(int time)
 {
     double unitT = 100/(controlPoint.size()-3);
     if(controlPoint.size() > 3){
-        if(time < 100){
-            if(time != 0){
-                if(time > unitT){
-                    time = time - (theNumberOfcp-1)*unitT;
-                }
+        if(time < 99){
+
+            if(time > testID){//decrease
+                testID = time;
+                time = time - (theNumberOfcp-1)*unitT;
                 if(time > unitT){
                     theNumberOfcp++;
                     time = time - (theNumberOfcp-1)*unitT;
                 }
-                if(time == unitT*(theNumberOfcp-1)){
+            }else{//increase
+                testID = time;
+                if(time < unitT*(theNumberOfcp-1))
+                {
                     theNumberOfcp--;
-                    time =  time - (theNumberOfcp-1)*unitT;
                 }
-
-                tPosition = time*(1/unitT);
-                drawFrenet = true;
+                time = time - (theNumberOfcp-1)*unitT;
             }
+
+            tPosition = time*(1/unitT);
+            drawFrenet = true;
+
+
         }
+
     }
     updateGL();
 }
@@ -628,8 +635,8 @@ void GLWidget::drawFrenetFrame()
 {
     float px,py,pz,fx,fy,fz;
     if(drawFrenet){
-//        qDebug() <<"NUMBER" << theNumberOfcp;
-//        qDebug() << "tp"<< tPosition;
+        qDebug() << "numberofP" << theNumberOfcp;
+        qDebug() << "time"<<tPosition;
         glBegin(GL_LINES);
             Ax = -0.5*controlPoint[theNumberOfcp-1][0] + 1.5*controlPoint[theNumberOfcp][0] - 1.5*controlPoint[theNumberOfcp+1][0] + 0.5*controlPoint[theNumberOfcp+2][0];
             Ay = -0.5*controlPoint[theNumberOfcp-1][1] + 1.5*controlPoint[theNumberOfcp][1] - 1.5*controlPoint[theNumberOfcp+1][1] + 0.5*controlPoint[theNumberOfcp+2][1];
@@ -654,7 +661,6 @@ void GLWidget::drawFrenetFrame()
             Qz = 6*Az/sqrt(36*Az*Az + 4*Bz*Bz)+2*Bz/sqrt(36*Az*Az + 4*Bz*Bz);
 
              **/
-
             //tangent
             Vx = 3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx;
             Vy = 3*Ay*tPosition*tPosition + 2*By*tPosition +Cy;
@@ -887,6 +893,7 @@ void GLWidget::setFilled(bool a)
 void GLWidget::cleanAllPoint()
 {
     controlPoint.clear();
+    drawFrenet = false;
     updateGL();
 }
 
