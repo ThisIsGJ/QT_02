@@ -97,8 +97,10 @@ private:
     int upZ;
     bool movePoint;
     int theMovePoint;
-    int theNumberOfcp;
+    int theNumberOfcp; //the number the control point
     double tOfFrenet;
+    double Ax,Ay,Az,Bx,By,Bz,Cx,Cy,Cz,Dx,Dy,Dz,Vx,Vy,Vz,Qx,Qy,Qz,tPosition;
+    bool drawFrenet;
 
 
     // Functions
