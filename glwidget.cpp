@@ -610,7 +610,7 @@ void GLWidget::frenetFrameMove(int time)
                 time = time - (theNumberOfcp-1)*unitT;
                 if(time > unitT){
                     theNumberOfcp++;
-                    time = time - (theNumberOfcp-1)*unitT;
+                    time = testID - (theNumberOfcp-1)*unitT;
                 }
             }else{//increase
                 testID = time;
@@ -634,8 +634,6 @@ void GLWidget::drawFrenetFrame()
 {
     float px,py,pz,fx,fy,fz;
     if(drawFrenet){
-//        qDebug() << "tposition" << tPosition;
-//        qDebug() << "theNumberOf" << theNumberOfcp;
         glBegin(GL_LINES);
             Ax = -0.5*controlPoint[theNumberOfcp-1][0] + 1.5*controlPoint[theNumberOfcp][0] - 1.5*controlPoint[theNumberOfcp+1][0] + 0.5*controlPoint[theNumberOfcp+2][0];
             Ay = -0.5*controlPoint[theNumberOfcp-1][1] + 1.5*controlPoint[theNumberOfcp][1] - 1.5*controlPoint[theNumberOfcp+1][1] + 0.5*controlPoint[theNumberOfcp+2][1];
