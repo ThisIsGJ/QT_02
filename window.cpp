@@ -126,5 +126,3 @@ void Window::moveFrenetFrame(int t)
 }
 
 
-
-
