@@ -104,7 +104,6 @@ private:
     int testID;
     bool drawFCube;
 
-
     // Functions
     void redraw();
    // void makeSpots(int tim, QImage *buf);

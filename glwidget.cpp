@@ -621,8 +621,14 @@ void GLWidget::frenetFrameMove(int time)
                 time = time - (theNumberOfcp-1)*unitT;
             }
 
-            tPosition = time*(1/unitT);
+            if(theNumberOfcp == controlPoint.size()-2){
+                 theNumberOfcp--;
+                 tPosition = 1;
+            }else{
+                tPosition = time*(1/unitT);
+            }
             drawFrenet = true;
+
         }else{
             drawFrenet = false;
         }
@@ -742,24 +748,28 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     }
     else{
         if(button == Qt::RightButton){
-            if(state == 1){
-                point.clear();
-                point.append((e->x()-284)/71.25);
-                point.append(0);
-                point.append((e->y()-255)/63.75);
-                controlPoint.append(point);
-            }else if(state == 2){
-                point.clear();
-                point.append(0);
-                point.append(-(e->y()-255)/63.75);
-                point.append(-(e->x()-284)/71.25);
-                controlPoint.append(point);
+            if(drawFrenet){
+                qDebug() << "please reset frenet slides";
             }else{
-                point.clear();
-                point.append((e->x()-284)/71.25);
-                point.append(-(e->y()-255)/63.75);
-                point.append(0);
-                controlPoint.append(point);
+                if(state == 1){
+                    point.clear();
+                    point.append((e->x()-284)/71.25);
+                    point.append(0);
+                    point.append((e->y()-255)/63.75);
+                    controlPoint.append(point);
+                }else if(state == 2){
+                    point.clear();
+                    point.append(0);
+                    point.append(-(e->y()-255)/63.75);
+                    point.append(-(e->x()-284)/71.25);
+                    controlPoint.append(point);
+                }else{
+                    point.clear();
+                    point.append((e->x()-284)/71.25);
+                    point.append(-(e->y()-255)/63.75);
+                    point.append(0);
+                    controlPoint.append(point);
+                }
             }
 
         }else if(button == Qt::LeftButton){
