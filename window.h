@@ -49,6 +49,7 @@ private:
         void dPoint();
         void cleanPoint();
         void moveFrenetFrame(int);
+        void drawCylinder(bool);
 
 protected:
          void  resizeEvent(QResizeEvent * );

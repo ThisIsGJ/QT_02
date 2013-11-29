@@ -39,15 +39,16 @@ public:
     void rotx(int);
     void roty(int);
     void rotz(int);
-    void setxFrom(int a);
-    void setyFrom(int a);
-    void setzFrom(int a);
+    void setxFrom(int);
+    void setyFrom(int);
+    void setzFrom(int);
     void setFilled(bool a);
     void setState(int s);
     void deletePoint();
     void cleanAllPoint();
     void frenetFrameMove(int);
     bool drawFrenet;
+    void setDrawCylinder(bool);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -101,8 +102,10 @@ private:
     int theNumberOfcp; //the number the control point
     double tOfFrenet;
     double Ax,Ay,Az,Bx,By,Bz,Cx,Cy,Cz,Dx,Dy,Dz,Vx,Vy,Vz,Qx,Qy,Qz,tPosition;
+    double px,py,pz,fVx,fVy,fVz,fBx,fBy,fBz,fNx,fNy,fNz;
     int testID;
     bool drawFCube;
+    bool drawCylinder;
 
     // Functions
     void redraw();
@@ -119,6 +122,8 @@ private:
     void setPoint();
     void drawCatmullRoom();
     void drawFrenetFrame();
+    void setFactor(int i);
+    void drawTheCylinder();
 };
 
 

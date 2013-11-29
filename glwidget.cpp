@@ -27,7 +27,8 @@ GLWidget::GLWidget(QWidget *parent)
       theNumberOfcp(1),
       tPosition(0),
       drawFrenet(false),
-      drawFCube(true)
+      drawFCube(true),
+      drawCylinder(false)
 {
     startup();
 }
@@ -130,16 +131,13 @@ void GLWidget::paintGL()
 
     glLoadIdentity();
     gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, upX, upY, upZ);
-   // glTranslatef( 0.0, 0.0, -10.0 );
-   // glScalef( scale, scale, scale );
-    //glOrtho();
-   // glCallList( object );   no display list this version just make the cube
     makeGround();
     makeAxes();
     makeDice();
     setPoint();
-    drawCatmullRoom();
     drawFrenetFrame();
+    drawCatmullRoom();
+    drawTheCylinder();
 }
 
 /* 2D */
@@ -564,39 +562,51 @@ void GLWidget::deletePoint()
 
 void GLWidget::drawCatmullRoom()
 {
-    float px,py,pz,fx,fy,fz;
 
     if(controlPoint.size() > 3)
     {
         glPointSize(10);
         glColor3f(0,0,0);
         glBegin(GL_LINE_STRIP);
-
         for(int i = 1; i < controlPoint.size()-2; i++)
                 {
                     for(int j = 0;  j < 100; j++){
-                        double t = j*0.01; //time
-
-                        px = controlPoint[i][0]
-                              + 0.5*t*(-controlPoint[i-1][0]+controlPoint[i+1][0])
-                              + t*t*(controlPoint[i-1][0] - 2.5*controlPoint[i][0] + 2*controlPoint[i+1][0] - 0.5*controlPoint[i+2][0])
-                              + t*t*t*(-0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0]);
-
-                        py = controlPoint[i][1]
-                              + 0.5*t*(-controlPoint[i-1][1]+controlPoint[i+1][1])
-                              + t*t*(controlPoint[i-1][1] - 2.5*controlPoint[i][1] + 2*controlPoint[i+1][1] - 0.5*controlPoint[i+2][1])
-                              + t*t*t*(-0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1]);
-
-                        pz = controlPoint[i][2]
-                              + 0.5*t*(-controlPoint[i-1][2]+controlPoint[i+1][2])
-                              + t*t*(controlPoint[i-1][2] - 2.5*controlPoint[i][2] + 2*controlPoint[i+1][2] - 0.5*controlPoint[i+2][2])
-                              + t*t*t*(-0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2]);
-
+                        tPosition = j*0.01; //time
+                        setFactor(i);
                         glVertex3f(px,py,pz);
+                     }                   
+                 }
+        glEnd();
+    }
+}
+
+void GLWidget::drawTheCylinder()
+{
+
+    if(drawCylinder){
+        glColor3f(0,0,0);
+        glBegin(GL_LINE_LOOP);
+        for(int i = 1; i < controlPoint.size()-2; i++)
+                {
+                    for(int j = 0;  j < 100; j++){
+                        tPosition = j*0.01; //time
+                        setFactor(i);
+
+                        QVector3D p(px+(fBx*0.2),py+(fBy*0.2),pz+(fBz*0.2));
+                        QVector3D a(px,py,pz);
+                        QMatrix4x4 m;
+
+                        for(double k = 0;k < 360;k = k + 0.5){
+                            p-=a;
+                            m.rotate(k, Vx, Vy, Vz);
+                            p = p*m;
+                            p+=a;
+                            glVertex3f(p.x(),p.y(),p.z());
 
                         }
-                 }
-         glEnd();
+                     }
+                 }            
+        glEnd();
     }
 }
 
@@ -638,80 +648,26 @@ void GLWidget::frenetFrameMove(int time)
 
 void GLWidget::drawFrenetFrame()
 {
-    float px,py,pz,fx,fy,fz;
     if(drawFrenet){
+        glColor3f(1,0,0);
         glBegin(GL_LINES);
-            Ax = -0.5*controlPoint[theNumberOfcp-1][0] + 1.5*controlPoint[theNumberOfcp][0] - 1.5*controlPoint[theNumberOfcp+1][0] + 0.5*controlPoint[theNumberOfcp+2][0];
-            Ay = -0.5*controlPoint[theNumberOfcp-1][1] + 1.5*controlPoint[theNumberOfcp][1] - 1.5*controlPoint[theNumberOfcp+1][1] + 0.5*controlPoint[theNumberOfcp+2][1];
-            Az = -0.5*controlPoint[theNumberOfcp-1][2] + 1.5*controlPoint[theNumberOfcp][2] - 1.5*controlPoint[theNumberOfcp+1][2] + 0.5*controlPoint[theNumberOfcp+2][2];
-            Bx = controlPoint[theNumberOfcp-1][0] - 2.5*controlPoint[theNumberOfcp][0] + 2*controlPoint[theNumberOfcp+1][0] - 0.5*controlPoint[theNumberOfcp+2][0];
-            By = controlPoint[theNumberOfcp-1][1] - 2.5*controlPoint[theNumberOfcp][1] + 2*controlPoint[theNumberOfcp+1][1] - 0.5*controlPoint[theNumberOfcp+2][1];
-            Bz = controlPoint[theNumberOfcp-1][2] - 2.5*controlPoint[theNumberOfcp][2] + 2*controlPoint[theNumberOfcp+1][2] - 0.5*controlPoint[theNumberOfcp+2][2];
-            Cx = 0.5*(-controlPoint[theNumberOfcp-1][0]+controlPoint[theNumberOfcp+1][0]);
-            Cy = 0.5*(-controlPoint[theNumberOfcp-1][1]+controlPoint[theNumberOfcp+1][1]);
-            Cz = 0.5*(-controlPoint[theNumberOfcp-1][2]+controlPoint[theNumberOfcp+1][2]);
-            Dx = controlPoint[theNumberOfcp][0];
-            Dy = controlPoint[theNumberOfcp][1];
-            Dz = controlPoint[theNumberOfcp][2];
-
-            //unit vector of tangent
-            Vx = (3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx)/
-                    sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
-                             + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
-            Vy = (3*Ay*tPosition*tPosition + 2*By*tPosition +Cy)/
-                    sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
-                             + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
-            Vz = (3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz)/
-                    sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
-                             + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
-
-            if(Vx != Vx){Vx = 0;}
-            if(Vy != Vy){Vy = 0;}
-            if(Vz != Vz){Vz = 0;}
-
-
-            //Q ACCELERATION
-            Qx = 6*Ax*tPosition+2*Bx;
-            Qy = 6*Ay*tPosition+2*By;
-            Qz = 6*Az*tPosition+2*Bz;
-
-            px = Dx + tPosition*Cx + tPosition*tPosition*Bx + tPosition*tPosition*tPosition*Ax;
-            py = Dy + tPosition*Cy + tPosition*tPosition*By + tPosition*tPosition*tPosition*Ay;
-            pz = Dz + tPosition*Cz + tPosition*tPosition*Bz + tPosition*tPosition*tPosition*Az;
-
-            //tangent
-            fx = Vx;
-            fy = Vy;
-            fz = Vz;
+            setFactor(theNumberOfcp);
 
             //draw unit vector of tangent
             glVertex3f(px,py,pz);
-            glVertex3f(px+fx,py+fy,pz+fz);
+            glVertex3f(px+fVx,py+fVy,pz+fVz);
 
             //draw unit vector of binormal
-            fx = (Vy*Qz - Vz*Qy)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
-            fy = -(Vx*Qz - Vz*Qx)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
-            fz = (Vx*Qy - Vy*Qx)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
-
             glVertex3f(px,py,pz);
-            glVertex3f(px+fx,py+fy,pz+fz);
+            glVertex3f(px+fBx,py+fBy,pz+fBz);
 
             //draw unit vector of normal
-            fx = (-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy)
-                    /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
-                          + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));
-            fy = (-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx))
-                    /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
-                          + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));;
-            fz = ((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx)
-                    /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
-                          + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));;
-
             glVertex3f(px,py,pz);
-            glVertex3f(px+fx,py+fy,pz+fz);
+            glVertex3f(px+fNx,py+fNy,pz+fNz);
 
        glEnd();
     }
+
     if(drawFCube){
 
     }
@@ -719,6 +675,62 @@ void GLWidget::drawFrenetFrame()
 
 }
 
+void GLWidget::setFactor(int i){
+
+    Ax = -0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0];
+    Ay = -0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1];
+    Az = -0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2];
+    Bx = controlPoint[i-1][0] - 2.5*controlPoint[i][0] + 2*controlPoint[i+1][0] - 0.5*controlPoint[i+2][0];
+    By = controlPoint[i-1][1] - 2.5*controlPoint[i][1] + 2*controlPoint[i+1][1] - 0.5*controlPoint[i+2][1];
+    Bz = controlPoint[i-1][2] - 2.5*controlPoint[i][2] + 2*controlPoint[i+1][2] - 0.5*controlPoint[i+2][2];
+    Cx = 0.5*(-controlPoint[i-1][0]+controlPoint[i+1][0]);
+    Cy = 0.5*(-controlPoint[i-1][1]+controlPoint[i+1][1]);
+    Cz = 0.5*(-controlPoint[i-1][2]+controlPoint[i+1][2]);
+    Dx = controlPoint[i][0];
+    Dy = controlPoint[i][1];
+    Dz = controlPoint[i][2];
+
+    //unit vector of tangent
+    Vx = (3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx)/
+            sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
+                     + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
+    Vy = (3*Ay*tPosition*tPosition + 2*By*tPosition +Cy)/
+            sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
+                     + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
+    Vz = (3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz)/
+            sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
+                     + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
+
+    //Q ACCELERATION
+    Qx = 6*Ax*tPosition+2*Bx;
+    Qy = 6*Ay*tPosition+2*By;
+    Qz = 6*Az*tPosition+2*Bz;
+
+    px = Dx + tPosition*Cx + tPosition*tPosition*Bx + tPosition*tPosition*tPosition*Ax;
+    py = Dy + tPosition*Cy + tPosition*tPosition*By + tPosition*tPosition*tPosition*Ay;
+    pz = Dz + tPosition*Cz + tPosition*tPosition*Bz + tPosition*tPosition*tPosition*Az;
+
+    //tangent
+    fVx = Vx;
+    fVy = Vy;
+    fVz = Vz;
+
+    //draw unit vector of binormal
+    fBx = (Vy*Qz - Vz*Qy)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
+    fBy = -(Vx*Qz - Vz*Qx)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
+    fBz = (Vx*Qy - Vy*Qx)/sqrt(pow((Vy*Qz - Vz*Qy),2) + pow((Vx*Qz - Vz*Qx),2) + pow((Vx*Qy - Vy*Qx),2));
+
+    //draw unit vector of normal
+    fNx = (-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy)
+            /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
+                  + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));
+    fNy = (-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx))
+            /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
+                  + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));;
+    fNz = ((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx)
+            /sqrt(pow((-(Vx*Qz - Vz*Qx)*Vz - (Vx*Qy - Vy*Qx)*Vy),2)
+                  + pow((-((Vy*Qz - Vz*Qy)*Vz - (Vx*Qy - Vy*Qx)*Vx)),2) + pow(((Vy*Qz - Vz*Qy)*Vy + (Vx*Qz - Vz*Qx)*Vx),2));;
+}
 
 
 // mouse routines for camera control to be implemented
@@ -918,7 +930,11 @@ void GLWidget::cleanAllPoint()
 
 
 
-
+void GLWidget::setDrawCylinder(bool b)
+{
+    drawCylinder = b;
+    updateGL();
+}
 
 
 
