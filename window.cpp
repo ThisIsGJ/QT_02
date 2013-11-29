@@ -125,4 +125,7 @@ void Window::moveFrenetFrame(int t)
     m_glWidget->frenetFrameMove(t);
 }
 
+void Window::drawCylinder(bool b){
+    m_glWidget->setDrawCylinder(b);
+}
 

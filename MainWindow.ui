@@ -115,7 +115,7 @@
         <x>10</x>
         <y>80</y>
         <width>151</width>
-        <height>41</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -154,7 +154,7 @@
         <x>10</x>
         <y>40</y>
         <width>151</width>
-        <height>41</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -193,7 +193,7 @@
         <x>10</x>
         <y>120</y>
         <width>151</width>
-        <height>51</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_3">
@@ -229,8 +229,8 @@
      <widget class="QRadioButton" name="radioButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>480</y>
+        <x>50</x>
+        <y>470</y>
         <width>61</width>
         <height>20</height>
        </rect>
@@ -341,6 +341,19 @@
       </property>
       <property name="text">
        <string>clean all points</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>430</y>
+        <width>102</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cylinder</string>
       </property>
      </widget>
     </widget>
@@ -532,8 +545,8 @@
    <slot>filledOn(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>552</y>
+     <x>108</x>
+     <y>542</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -653,6 +666,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>radioButton_2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>frmMain</receiver>
+   <slot>drawCylinder(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>502</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>210</x>
+     <y>597</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>pushmebut()</slot>
@@ -671,5 +700,6 @@
   <slot>cleanPoint()</slot>
   <slot>moveFrenetFrame(int)</slot>
   <slot>drawFrenetF()</slot>
+  <slot>drawCylinder(bool)</slot>
  </slots>
 </ui>
