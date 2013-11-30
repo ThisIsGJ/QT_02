@@ -27,8 +27,9 @@ GLWidget::GLWidget(QWidget *parent)
       theNumberOfcp(1),
       tPosition(0),
       drawFrenet(false),
-      drawFCube(true),
-      drawCylinder(false)
+      drawFCube(false),
+      drawCylinder(false),
+      blockFrenetFrame(true)
 {
     startup();
 }
@@ -60,7 +61,7 @@ void GLWidget::startup()
     setViewPoint();
     movePoint = false;
     theMovePoint = -1;
-    testID = 0;
+    timeID = 0;
 }
 
 void GLWidget::clear()
@@ -582,93 +583,102 @@ void GLWidget::drawCatmullRoom()
 
 void GLWidget::drawTheCylinder()
 {
-
     if(drawCylinder){
-        glColor3f(0,0,0);
-        glBegin(GL_LINE_LOOP);
+        glColor3f(0,0,1);
+
         for(int i = 1; i < controlPoint.size()-2; i++)
                 {
-                    for(int j = 0;  j < 100; j++){
-                        tPosition = j*0.01; //time
+                    for(int j = 0;  j <= 200; j++){
+                        tPosition = j*0.005; //time
                         setFactor(i);
 
                         QVector3D p(px+(fBx*0.2),py+(fBy*0.2),pz+(fBz*0.2));
                         QVector3D a(px,py,pz);
                         QMatrix4x4 m;
-
+                        glBegin(GL_LINE_LOOP);
                         for(double k = 0;k < 360;k = k + 0.5){
                             p-=a;
                             m.rotate(k, Vx, Vy, Vz);
                             p = p*m;
                             p+=a;
                             glVertex3f(p.x(),p.y(),p.z());
-
                         }
+                        glEnd();
                      }
+
                  }            
-        glEnd();
+
     }
 }
 
 void GLWidget::frenetFrameMove(int time)
 {
-    double unitT = 100/(controlPoint.size()-3);
-    if(controlPoint.size() > 3){
-        if(time != 0){
-            if(time > testID){//decrease
-                testID = time;
-                time = time - (theNumberOfcp-1)*unitT;
-                if(time > unitT){
-                    theNumberOfcp++;
-                    time = testID - (theNumberOfcp-1)*unitT;
-                }
-            }else{//increase
-                testID = time;
-                if(time < unitT*(theNumberOfcp-1))
-                {
-                    theNumberOfcp--;
-                }
-                time = time - (theNumberOfcp-1)*unitT;
-            }
-
-            if(theNumberOfcp == controlPoint.size()-2){
-                 theNumberOfcp--;
-                 tPosition = 1;
-            }else{
-                tPosition = time*(1/unitT);
-            }
-            drawFrenet = true;
-
-        }else{
-            drawFrenet = false;
-        }
-    }
+    timeID = time;
     updateGL();
 }
 
 void GLWidget::drawFrenetFrame()
 {
-    if(drawFrenet){
-        glColor3f(1,0,0);
-        glBegin(GL_LINES);
-            setFactor(theNumberOfcp);
+    if(drawFrenet)
+    {
+        double unitT = 100/(controlPoint.size()-3);
+        theNumberOfcp = (timeID/unitT) + 1;
+        tPosition = (timeID - (theNumberOfcp-1)*unitT)*(1/unitT);
 
-            //draw unit vector of tangent
+    //    qDebug() << theNumberOfcp;
+    //    qDebug() << tPosition;
+        if(drawFrenet){
+            glColor3f(1,0,0);
+            glBegin(GL_LINES);
+                setFactor(theNumberOfcp);
+
+                //draw unit vector of tangent
+                glVertex3f(px,py,pz);
+                glVertex3f(px+fVx,py+fVy,pz+fVz);
+
+                //draw unit vector of binormal
+                glVertex3f(px,py,pz);
+                glVertex3f(px+fBx,py+fBy,pz+fBz);
+
+                //draw unit vector of normal
+                glVertex3f(px,py,pz);
+                glVertex3f(px+fNx,py+fNy,pz+fNz);
+
+           glEnd();
+
+        }
+
+        if(drawFCube){
+            glColor3f(0,0,0);
+
+            glBegin(GL_LINE_LOOP);
             glVertex3f(px,py,pz);
             glVertex3f(px+fVx,py+fVy,pz+fVz);
-
-            //draw unit vector of binormal
+            glVertex3f(px+fBx+fVx,py+fBy+fVy,pz+fBz+fVz);
+            glVertex3f(px+fBx,py+fBy,pz+fBz);
+            glEnd();
+            glBegin(GL_LINE_LOOP);
             glVertex3f(px,py,pz);
             glVertex3f(px+fBx,py+fBy,pz+fBz);
-
-            //draw unit vector of normal
-            glVertex3f(px,py,pz);
+            glVertex3f(px+fNx+fBx,py+fNy+fBy,pz+fNz+fBz);
             glVertex3f(px+fNx,py+fNy,pz+fNz);
+            glEnd();
 
-       glEnd();
-    }
+            glBegin(GL_LINE_LOOP);
+            glVertex3f(px+fBx+fVx,py+fBy+fVy,pz+fBz+fVz);
+            glVertex3f(px+fVx,py+fVy,pz+fVz);
+            glVertex3f(px+fNx+fVx,py+fNy+fVy,pz+fNz+fVz);
+            glVertex3f(px+fNx+fVx+fBx,py+fNy+fVy+fBy,pz+fNz+fVz+fBz);
+            glEnd();
 
-    if(drawFCube){
+            glBegin(GL_LINE_LOOP);
+            glVertex3f(px+fNx,py+fNy,pz+fNz);
+            glVertex3f(px+fNx+fVx,py+fNy+fVy,pz+fNz+fVz);
+            glVertex3f(px+fNx+fVx+fBx,py+fNy+fVy+fBy,pz+fNz+fVz+fBz);
+            glVertex3f(px+fNx+fBx,py+fNy+fBy,pz+fNz+fBz);
+            glEnd();
+
+        }
 
     }
 
@@ -760,28 +770,25 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     }
     else{
         if(button == Qt::RightButton){
-            if(drawFrenet){
-                qDebug() << "please reset frenet slides";
+
+            if(state == 1){
+                point.clear();
+                point.append((e->x()-284)/71.25);
+                point.append(0);
+                point.append((e->y()-255)/63.75);
+                controlPoint.append(point);
+            }else if(state == 2){
+                point.clear();
+                point.append(0);
+                point.append(-(e->y()-255)/63.75);
+                point.append(-(e->x()-284)/71.25);
+                controlPoint.append(point);
             }else{
-                if(state == 1){
-                    point.clear();
-                    point.append((e->x()-284)/71.25);
-                    point.append(0);
-                    point.append((e->y()-255)/63.75);
-                    controlPoint.append(point);
-                }else if(state == 2){
-                    point.clear();
-                    point.append(0);
-                    point.append(-(e->y()-255)/63.75);
-                    point.append(-(e->x()-284)/71.25);
-                    controlPoint.append(point);
-                }else{
-                    point.clear();
-                    point.append((e->x()-284)/71.25);
-                    point.append(-(e->y()-255)/63.75);
-                    point.append(0);
-                    controlPoint.append(point);
-                }
+                point.clear();
+                point.append((e->x()-284)/71.25);
+                point.append(-(e->y()-255)/63.75);
+                point.append(0);
+                controlPoint.append(point);
             }
 
         }else if(button == Qt::LeftButton){
@@ -928,19 +935,28 @@ void GLWidget::cleanAllPoint()
     updateGL();
 }
 
-
-
 void GLWidget::setDrawCylinder(bool b)
 {
     drawCylinder = b;
     updateGL();
 }
 
+void GLWidget::setDrawCube(bool c)
+{
+    drawFCube = c;
+    updateGL();
+}
 
-
-
-
-
+void GLWidget::setDrawFrenetFrame(bool d)
+{
+    if(controlPoint.size() > 3)
+    {
+        drawFrenet = d;
+    }else{
+        qDebug() << "no enough point";
+    }
+    updateGL();
+}
 
 
 
