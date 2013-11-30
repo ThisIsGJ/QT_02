@@ -62,6 +62,7 @@ void GLWidget::startup()
     movePoint = false;
     theMovePoint = -1;
     timeID = 0;
+    cylinderRadius = 0.1;
 }
 
 void GLWidget::clear()
@@ -592,7 +593,7 @@ void GLWidget::drawTheCylinder()
                         tPosition = j*0.005; //time
                         setFactor(i);
 
-                        QVector3D p(px+(fBx*0.2),py+(fBy*0.2),pz+(fBz*0.2));
+                        QVector3D p(px+(fBx*cylinderRadius),py+(fBy*cylinderRadius),pz+(fBz*cylinderRadius));
                         QVector3D a(px,py,pz);
                         QMatrix4x4 m;
                         glBegin(GL_LINE_LOOP);
@@ -619,7 +620,7 @@ void GLWidget::frenetFrameMove(int time)
 
 void GLWidget::drawFrenetFrame()
 {
-    if(drawFrenet)
+    if(drawFrenet || drawFCube)
     {
         double unitT = 100/(controlPoint.size()-3);
         theNumberOfcp = (timeID/unitT) + 1;
@@ -652,6 +653,8 @@ void GLWidget::drawFrenetFrame()
             glColor3f(0,0,0);
 
             glBegin(GL_LINE_LOOP);
+
+            setFactor(theNumberOfcp);
             glVertex3f(px,py,pz);
             glVertex3f(px+fVx,py+fVy,pz+fVz);
             glVertex3f(px+fBx+fVx,py+fBy+fVy,pz+fBz+fVz);
@@ -915,8 +918,6 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 
     mClickLocationX = mouseX;
     mClickLocationY = mouseY;
-
-
     updateGL();
 }
 
@@ -937,13 +938,23 @@ void GLWidget::cleanAllPoint()
 
 void GLWidget::setDrawCylinder(bool b)
 {
-    drawCylinder = b;
+    if(controlPoint.size() > 3)
+    {
+        drawCylinder = b;
+    }else{
+        showError();
+    }
     updateGL();
 }
 
 void GLWidget::setDrawCube(bool c)
 {
-    drawFCube = c;
+    if(controlPoint.size() > 3)
+    {
+           drawFCube = c;
+    }else{
+        showError();
+    }
     updateGL();
 }
 
@@ -953,14 +964,30 @@ void GLWidget::setDrawFrenetFrame(bool d)
     {
         drawFrenet = d;
     }else{
-        qDebug() << "no enough point";
+        showError();
     }
+    updateGL();
+}
+
+void GLWidget::setCylinderRadius(int r)
+{
+    cylinderRadius = r/10.0;
     updateGL();
 }
 
 
 
+void GLWidget::showError()
+{
+    QString vnum;
+    QString mess;
+    QString title="ERROR";
 
+    vnum.setNum ( version );
+    mess="Please add 4 points to generate catmull-rom firstly.";
+    mess = mess+vnum;
+    QMessageBox::information( this, title, mess, QMessageBox::Ok );
+}
 
 
 

@@ -140,5 +140,10 @@ void Window::drawFrenetF(bool d)
     m_glWidget->setDrawFrenetFrame(d);
 }
 
+void Window::sendRadiusOfCyln(int t)
+{
+    m_glWidget->setCylinderRadius(t);
+}
+
 
 

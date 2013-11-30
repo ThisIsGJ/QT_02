@@ -113,19 +113,12 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>93</y>
+        <y>80</y>
         <width>151</width>
         <height>41</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Y</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QSlider" name="horizontalSlider_2">
          <property name="maximum">
@@ -146,13 +139,20 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Y</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>53</y>
+        <y>40</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -191,7 +191,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>133</y>
+        <y>120</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -229,7 +229,7 @@
      <widget class="QRadioButton" name="radioButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>10</x>
         <y>500</y>
         <width>61</width>
         <height>20</height>
@@ -243,20 +243,20 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>180</y>
+        <y>170</y>
         <width>171</width>
         <height>32</height>
        </rect>
       </property>
       <property name="text">
-       <string>perspective</string>
+       <string>perspective view</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>200</y>
+        <y>220</y>
         <width>91</width>
         <height>32</height>
        </rect>
@@ -269,7 +269,7 @@
       <property name="geometry">
        <rect>
         <x>80</x>
-        <y>200</y>
+        <y>220</y>
         <width>91</width>
         <height>32</height>
        </rect>
@@ -282,7 +282,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>230</y>
+        <y>240</y>
         <width>171</width>
         <height>32</height>
        </rect>
@@ -295,7 +295,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>260</y>
+        <y>280</y>
         <width>171</width>
         <height>32</height>
        </rect>
@@ -309,7 +309,7 @@
        <rect>
         <x>10</x>
         <y>430</y>
-        <width>141</width>
+        <width>151</width>
         <height>22</height>
        </rect>
       </property>
@@ -334,7 +334,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>290</y>
+        <y>300</y>
         <width>171</width>
         <height>32</height>
        </rect>
@@ -347,7 +347,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>340</y>
+        <y>360</y>
         <width>121</width>
         <height>23</height>
        </rect>
@@ -360,7 +360,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>360</y>
+        <y>380</y>
         <width>141</width>
         <height>23</height>
        </rect>
@@ -373,13 +373,58 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>320</y>
+        <y>340</y>
         <width>141</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>draw frenet frame</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>200</y>
+        <width>131</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Orthogonal View</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="horizontalSlider_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>480</y>
+        <width>151</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>10</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>460</y>
+        <width>141</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>radius of cylinder</string>
       </property>
      </widget>
     </widget>
@@ -507,8 +552,8 @@
    <slot>zrot(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>222</y>
+     <x>107</x>
+     <y>212</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
@@ -555,12 +600,12 @@
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>79</x>
-     <y>222</y>
+     <x>93</x>
+     <y>212</y>
     </hint>
     <hint type="destinationlabel">
      <x>175</x>
-     <y>222</y>
+     <y>212</y>
     </hint>
    </hints>
   </connection>
@@ -571,7 +616,7 @@
    <slot>filledOn(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
+     <x>82</x>
      <y>572</y>
     </hint>
     <hint type="destinationlabel">
@@ -604,7 +649,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>102</x>
-     <y>258</y>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel">
      <x>191</x>
@@ -651,8 +696,8 @@
    <slot>dPoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>329</y>
+     <x>174</x>
+     <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>187</x>
@@ -699,8 +744,8 @@
    <slot>drawCylinder(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>401</y>
+     <x>132</x>
+     <y>435</y>
     </hint>
     <hint type="destinationlabel">
      <x>223</x>
@@ -715,8 +760,8 @@
    <slot>drawCube(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>133</x>
-     <y>426</y>
+     <x>145</x>
+     <y>455</y>
     </hint>
     <hint type="destinationlabel">
      <x>380</x>
@@ -731,12 +776,28 @@
    <slot>drawFrenetF(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>153</x>
-     <y>380</y>
+     <x>165</x>
+     <y>415</y>
     </hint>
     <hint type="destinationlabel">
      <x>83</x>
      <y>594</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_5</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>frmMain</receiver>
+   <slot>sendRadiusOfCyln(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>539</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>193</x>
+     <y>431</y>
     </hint>
    </hints>
   </connection>
@@ -760,5 +821,6 @@
   <slot>drawFrenetF(bool)</slot>
   <slot>drawCylinder(bool)</slot>
   <slot>drawCube(bool)</slot>
+  <slot>sendRadiusOfCyln(int)</slot>
  </slots>
 </ui>
