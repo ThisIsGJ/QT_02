@@ -129,3 +129,16 @@ void Window::drawCylinder(bool b){
     m_glWidget->setDrawCylinder(b);
 }
 
+void Window::drawCube(bool c)
+
+{
+    m_glWidget->setDrawCube(c);
+}
+
+void Window::drawFrenetF(bool d)
+{
+    m_glWidget->setDrawFrenetFrame(d);
+}
+
+
+

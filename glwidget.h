@@ -49,6 +49,8 @@ public:
     void frenetFrameMove(int);
     bool drawFrenet;
     void setDrawCylinder(bool);
+    void setDrawCube(bool);
+    void setDrawFrenetFrame(bool);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -103,9 +105,10 @@ private:
     double tOfFrenet;
     double Ax,Ay,Az,Bx,By,Bz,Cx,Cy,Cz,Dx,Dy,Dz,Vx,Vy,Vz,Qx,Qy,Qz,tPosition;
     double px,py,pz,fVx,fVy,fVz,fBx,fBy,fBz,fNx,fNy,fNz;
-    int testID;
+    double timeID;
     bool drawFCube;
     bool drawCylinder;
+    bool blockFrenetFrame;
 
     // Functions
     void redraw();

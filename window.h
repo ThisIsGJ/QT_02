@@ -50,6 +50,8 @@ private:
         void cleanPoint();
         void moveFrenetFrame(int);
         void drawCylinder(bool);
+        void drawCube(bool);
+        void drawFrenetF(bool);
 
 protected:
          void  resizeEvent(QResizeEvent * );
