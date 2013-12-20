@@ -130,7 +130,6 @@ void GLWidget::redraw()
 void GLWidget::paintGL()
 {
     glClear( GL_COLOR_BUFFER_BIT );
-
     glLoadIdentity();
     gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, upX, upY, upZ);
     makeGround();
@@ -406,82 +405,6 @@ void GLWidget::makeAxes()
 
 }
 
-/*
-void GLWidget::makeSpots(int tim, QImage *buf)
-{
-  int r=255, g=0, b=0;
-  int rad=25;
-  int w,h,i,j;
-
-  w=buf->width();
-  h=buf->height();
-
-  // set red
-  for (i=0; i<buf->width(); i++)
-    for (j=0; j<buf->height(); j++)
-      buf->setPixel(i,j, qRgb(r, g, b));
-
-  switch(tim) {
-  case 0: // value 1
-    drawCircle(rad, w/2, h/2, buf);
-    break;
-
-  case 1: // value 2
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-
-  case 2: // value 3
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/2, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-  case 3: // value 4
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, h/4, buf);
-    break;
-
-  case 4: // value 5
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-    drawCircle(rad, w/2, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, h/4, buf);
-    break;
-
-  case 5: // value 6
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, h/2, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-
-    drawCircle(rad, 3*w/4, h/4, buf);
-    drawCircle(rad, 3*w/4, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-  default: std::cerr << " big oopsy \n";
-    break;
-
-  }
-}
-
-void GLWidget::drawCircle(int radiu, int xcen, int ycen,  QImage *buf)
-{
-  int i,j,r2;
-
-  r2=radiu*radiu;
-
-  for(i=xcen-radiu; i<xcen+radiu; i++)
-    for(j=ycen-radiu; j<ycen+radiu; j++) {
-      if  ( (i-xcen)*(i-xcen) + (j-ycen)*(j-ycen) < r2)
-        buf->setPixel(i,j,qRgb(255, 255, 255));
-   }
-}*/
-
 // communication with the window widget
 void GLWidget::rotx(int a)
 {
@@ -614,6 +537,7 @@ void GLWidget::drawTheCylinder()
 
 void GLWidget::frenetFrameMove(int time)
 {
+    //qDebug() << time;
     timeID = time;
     updateGL();
 }
@@ -625,9 +549,13 @@ void GLWidget::drawFrenetFrame()
         double unitT = 100/(controlPoint.size()-3);
         theNumberOfcp = (timeID/unitT) + 1;
         tPosition = (timeID - (theNumberOfcp-1)*unitT)*(1/unitT);
-
-    //    qDebug() << theNumberOfcp;
-    //    qDebug() << tPosition;
+        if(theNumberOfcp >= controlPoint.size()-2)
+        {
+            theNumberOfcp = controlPoint.size()-3;
+            tPosition = 0.99999;
+        }
+        qDebug() << theNumberOfcp-1;
+        qDebug() << tPosition;
         if(drawFrenet){
             glColor3f(1,0,0);
             glBegin(GL_LINES);

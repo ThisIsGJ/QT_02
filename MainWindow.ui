@@ -115,7 +115,7 @@
         <x>10</x>
         <y>80</y>
         <width>151</width>
-        <height>41</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -154,7 +154,7 @@
         <x>10</x>
         <y>40</y>
         <width>151</width>
-        <height>41</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -193,7 +193,7 @@
         <x>10</x>
         <y>120</y>
         <width>151</width>
-        <height>41</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_3">
@@ -313,6 +313,12 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -380,6 +386,9 @@
       </property>
       <property name="text">
        <string>draw frenet frame</string>
+      </property>
+      <property name="autoRepeat">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_6">
