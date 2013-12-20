@@ -62,6 +62,7 @@ void GLWidget::startup()
     movePoint = false;
     theMovePoint = -1;
     timeID = 0;
+    cylinderRadius = 0.1;
 }
 
 void GLWidget::clear()
@@ -129,7 +130,6 @@ void GLWidget::redraw()
 void GLWidget::paintGL()
 {
     glClear( GL_COLOR_BUFFER_BIT );
-
     glLoadIdentity();
     gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, upX, upY, upZ);
     makeGround();
@@ -405,82 +405,6 @@ void GLWidget::makeAxes()
 
 }
 
-/*
-void GLWidget::makeSpots(int tim, QImage *buf)
-{
-  int r=255, g=0, b=0;
-  int rad=25;
-  int w,h,i,j;
-
-  w=buf->width();
-  h=buf->height();
-
-  // set red
-  for (i=0; i<buf->width(); i++)
-    for (j=0; j<buf->height(); j++)
-      buf->setPixel(i,j, qRgb(r, g, b));
-
-  switch(tim) {
-  case 0: // value 1
-    drawCircle(rad, w/2, h/2, buf);
-    break;
-
-  case 1: // value 2
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-
-  case 2: // value 3
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/2, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-  case 3: // value 4
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, h/4, buf);
-    break;
-
-  case 4: // value 5
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-    drawCircle(rad, w/2, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    drawCircle(rad, 3*w/4, h/4, buf);
-    break;
-
-  case 5: // value 6
-    drawCircle(rad, w/4, h/4, buf);
-    drawCircle(rad, w/4, h/2, buf);
-    drawCircle(rad, w/4, 3*h/4, buf);
-
-    drawCircle(rad, 3*w/4, h/4, buf);
-    drawCircle(rad, 3*w/4, h/2, buf);
-    drawCircle(rad, 3*w/4, 3*h/4, buf);
-    break;
-
-  default: std::cerr << " big oopsy \n";
-    break;
-
-  }
-}
-
-void GLWidget::drawCircle(int radiu, int xcen, int ycen,  QImage *buf)
-{
-  int i,j,r2;
-
-  r2=radiu*radiu;
-
-  for(i=xcen-radiu; i<xcen+radiu; i++)
-    for(j=ycen-radiu; j<ycen+radiu; j++) {
-      if  ( (i-xcen)*(i-xcen) + (j-ycen)*(j-ycen) < r2)
-        buf->setPixel(i,j,qRgb(255, 255, 255));
-   }
-}*/
-
 // communication with the window widget
 void GLWidget::rotx(int a)
 {
@@ -592,7 +516,7 @@ void GLWidget::drawTheCylinder()
                         tPosition = j*0.005; //time
                         setFactor(i);
 
-                        QVector3D p(px+(fBx*0.2),py+(fBy*0.2),pz+(fBz*0.2));
+                        QVector3D p(px+(fBx*cylinderRadius),py+(fBy*cylinderRadius),pz+(fBz*cylinderRadius));
                         QVector3D a(px,py,pz);
                         QMatrix4x4 m;
                         glBegin(GL_LINE_LOOP);
@@ -613,20 +537,25 @@ void GLWidget::drawTheCylinder()
 
 void GLWidget::frenetFrameMove(int time)
 {
+    //qDebug() << time;
     timeID = time;
     updateGL();
 }
 
 void GLWidget::drawFrenetFrame()
 {
-    if(drawFrenet)
+    if(drawFrenet || drawFCube)
     {
         double unitT = 100/(controlPoint.size()-3);
         theNumberOfcp = (timeID/unitT) + 1;
         tPosition = (timeID - (theNumberOfcp-1)*unitT)*(1/unitT);
-
-    //    qDebug() << theNumberOfcp;
-    //    qDebug() << tPosition;
+        if(theNumberOfcp >= controlPoint.size()-2)
+        {
+            theNumberOfcp = controlPoint.size()-3;
+            tPosition = 0.99999;
+        }
+        qDebug() << theNumberOfcp-1;
+        qDebug() << tPosition;
         if(drawFrenet){
             glColor3f(1,0,0);
             glBegin(GL_LINES);
@@ -652,6 +581,8 @@ void GLWidget::drawFrenetFrame()
             glColor3f(0,0,0);
 
             glBegin(GL_LINE_LOOP);
+
+            setFactor(theNumberOfcp);
             glVertex3f(px,py,pz);
             glVertex3f(px+fVx,py+fVy,pz+fVz);
             glVertex3f(px+fBx+fVx,py+fBy+fVy,pz+fBz+fVz);
@@ -915,8 +846,6 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
 
     mClickLocationX = mouseX;
     mClickLocationY = mouseY;
-
-
     updateGL();
 }
 
@@ -937,13 +866,23 @@ void GLWidget::cleanAllPoint()
 
 void GLWidget::setDrawCylinder(bool b)
 {
-    drawCylinder = b;
+    if(controlPoint.size() > 3)
+    {
+        drawCylinder = b;
+    }else{
+        showError();
+    }
     updateGL();
 }
 
 void GLWidget::setDrawCube(bool c)
 {
-    drawFCube = c;
+    if(controlPoint.size() > 3)
+    {
+           drawFCube = c;
+    }else{
+        showError();
+    }
     updateGL();
 }
 
@@ -953,14 +892,30 @@ void GLWidget::setDrawFrenetFrame(bool d)
     {
         drawFrenet = d;
     }else{
-        qDebug() << "no enough point";
+        showError();
     }
+    updateGL();
+}
+
+void GLWidget::setCylinderRadius(int r)
+{
+    cylinderRadius = r/10.0;
     updateGL();
 }
 
 
 
+void GLWidget::showError()
+{
+    QString vnum;
+    QString mess;
+    QString title="ERROR";
 
+    vnum.setNum ( version );
+    mess="Please add 4 points to generate catmull-rom firstly.";
+    mess = mess+vnum;
+    QMessageBox::information( this, title, mess, QMessageBox::Ok );
+}
 
 
 

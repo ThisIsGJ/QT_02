@@ -51,6 +51,7 @@ public:
     void setDrawCylinder(bool);
     void setDrawCube(bool);
     void setDrawFrenetFrame(bool);
+    void setCylinderRadius(int);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -109,6 +110,7 @@ private:
     bool drawFCube;
     bool drawCylinder;
     bool blockFrenetFrame;
+    double cylinderRadius;
 
     // Functions
     void redraw();
@@ -127,6 +129,7 @@ private:
     void drawFrenetFrame();
     void setFactor(int i);
     void drawTheCylinder();
+    void showError();
 };
 
 
