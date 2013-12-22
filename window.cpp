@@ -145,5 +145,7 @@ void Window::sendRadiusOfCyln(int t)
     m_glWidget->setCylinderRadius(t);
 }
 
-
+void Window::setHeart(bool b){
+    m_glWidget->setDrawHeart(b);
+}
 

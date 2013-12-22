@@ -308,7 +308,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>430</y>
+        <y>440</y>
         <width>151</width>
         <height>22</height>
        </rect>
@@ -327,7 +327,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>410</y>
+        <y>420</y>
         <width>141</width>
         <height>19</height>
        </rect>
@@ -349,24 +349,11 @@
        <string>clean all points</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>360</y>
-        <width>121</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>draw Cylinder</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="checkBox_2">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>380</y>
+        <y>350</y>
         <width>141</width>
         <height>23</height>
        </rect>
@@ -379,7 +366,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>340</y>
+        <y>330</y>
         <width>141</width>
         <height>23</height>
        </rect>
@@ -434,6 +421,32 @@
       </property>
       <property name="text">
        <string>radius of cylinder</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>390</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>draw Heart shape</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>370</y>
+        <width>121</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>draw Cylinder</string>
       </property>
      </widget>
     </widget>
@@ -769,8 +782,8 @@
    <slot>drawCube(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>455</y>
+     <x>157</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
      <x>380</x>
@@ -785,8 +798,8 @@
    <slot>drawFrenetF(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>415</y>
+     <x>172</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>83</x>
@@ -807,6 +820,22 @@
     <hint type="destinationlabel">
      <x>193</x>
      <y>431</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_4</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>frmMain</receiver>
+   <slot>setHeart(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>452</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>188</y>
     </hint>
    </hints>
   </connection>
@@ -831,5 +860,6 @@
   <slot>drawCylinder(bool)</slot>
   <slot>drawCube(bool)</slot>
   <slot>sendRadiusOfCyln(int)</slot>
+  <slot>setHeart(bool)</slot>
  </slots>
 </ui>

@@ -53,6 +53,7 @@ private:
         void drawCube(bool);
         void drawFrenetF(bool);
         void sendRadiusOfCyln(int);
+        void setHeart(bool);
 
 protected:
          void  resizeEvent(QResizeEvent * );

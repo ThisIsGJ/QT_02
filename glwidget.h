@@ -52,6 +52,7 @@ public:
     void setDrawCube(bool);
     void setDrawFrenetFrame(bool);
     void setCylinderRadius(int);
+    void setDrawHeart(bool);
 
 protected:
     //Initialize the OpenGL Graphics Engine
@@ -110,6 +111,7 @@ private:
     bool drawFCube;
     bool drawCylinder;
     bool blockFrenetFrame;
+    bool drawHeart;
     double cylinderRadius;
 
     // Functions
@@ -130,6 +132,7 @@ private:
     void setFactor(int i);
     void drawTheCylinder();
     void showError();
+    void drawTheHeart();
 };
 
 
