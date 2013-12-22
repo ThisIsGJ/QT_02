@@ -7,6 +7,12 @@
 #include <QVector>
 #include <QtMath>
 #include <QList>
+#define USE MATH DEFINES
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846264338327950288419717
+#endif
 
 
 const double torad = M_PI/180.0;
@@ -63,6 +69,7 @@ void GLWidget::startup()
     theMovePoint = -1;
     timeID = 0;
     cylinderRadius = 0.1;
+    drawHeart = false;
 }
 
 void GLWidget::clear()
@@ -139,6 +146,7 @@ void GLWidget::paintGL()
     drawFrenetFrame();              //draw the frenet frame
     drawCatmullRoom();              //draw the catmull room
     drawTheCylinder();              //draw the cylinder
+    drawTheHeart();                 //draw heart shape
 }
 
 /* 2D */
@@ -517,7 +525,6 @@ void GLWidget::drawTheCylinder()
                     for(int j = 0;  j <= 200; j++){
                         tPosition = j*0.005; //time
                         setFactor(i);
-
                         QVector3D p(px+(fBx*cylinderRadius),py+(fBy*cylinderRadius),pz+(fBz*cylinderRadius));
                         QVector3D a(px,py,pz);
                         QMatrix4x4 m;
@@ -533,7 +540,58 @@ void GLWidget::drawTheCylinder()
                      }
 
                  }            
+    }
+}
 
+void GLWidget::drawTheHeart(){
+    if(drawHeart){
+        {
+                glColor3f(0,0,1);
+
+                for(int i = 1; i < controlPoint.size()-2; i++)
+                        {
+                            for(int j = 0;  j <= 200; j++){
+                                tPosition = j*0.005; //time
+                                setFactor(i);
+                                glBegin(GL_LINE_LOOP);
+                                glVertex3f(px+0.5*fBx,py+0.5*fBy,pz+0.5*fBz);
+                                glVertex3f(px+(-0.5)*fNx,py+(-0.5)*fNy,pz+(-0.5)*fNz);
+                                glVertex3f(px+(-0.5)*fBx,py+(-0.5)*fBy,pz+(-0.5)*fBz);
+                                glVertex3f(px+0.5*fNx,py+0.5*fNy,pz+0.5*fNz);
+                                glEnd();
+
+                                double radi = sqrt(0.5)/2.0;
+                                glBegin(GL_LINE_LOOP);
+                                for(double x = radi; x>(-radi); x = x-0.01){
+                                    double y = sqrt(radi *radi-x*x);
+                                    glVertex3f(px-radi*fNx+radi*fBx+x*fNx+y*fBx,
+                                               py-radi*fNy+radi*fBy+x*fNy+y*fBy,
+                                               pz-radi*fNz+radi*fBz+x*fNz+y*fBz);
+                                    y = -sqrt(radi*radi-x*x);
+                                    glVertex3f(px-radi*fNx+radi*fBx+x*fNx+y*fBx,
+                                               py-radi*fNy+radi*fBy+x*fNy+y*fBy,
+                                               pz-radi*fNz+radi*fBz+x*fNz+y*fBz);
+                                }
+                                glEnd();
+
+                                glBegin(GL_LINE_LOOP);
+                                for(double x = radi; x>(-radi); x = x-0.01){
+                                    double y = sqrt(radi *radi-x*x);
+                                    glVertex3f(px-radi*fNx-radi*fBx+x*fNx+y*fBx,
+                                               py-radi*fNy-radi*fBy+x*fNy+y*fBy,
+                                               pz-radi*fNz-radi*fBz+x*fNz+y*fBz);
+                                    y = -sqrt(radi*radi-x*x);
+                                    glVertex3f(px-radi*fNx-radi*fBx+x*fNx+y*fBx,
+                                               py-radi*fNy-radi*fBy+x*fNy+y*fBy,
+                                               pz-radi*fNz-radi*fBz+x*fNz+y*fBz);
+                                }
+                                glEnd();
+
+                             }
+
+                         }
+
+            }
     }
 }
 
@@ -704,7 +762,7 @@ void GLWidget::mousePressEvent( QMouseEvent *e )
     }
     else{
         if(button == Qt::RightButton){
-
+            //(e->x()-284)/71.25 is used to change the screen axes to the 3D space(you may need to change the value if you are not to use the "retina screen")
             if(state == 1){
                 point.clear();
                 point.append((e->x()-284)/71.25);
@@ -892,7 +950,18 @@ void GLWidget::showError()
     QMessageBox::information( this, title, mess, QMessageBox::Ok );
 }
 
+void GLWidget::setDrawHeart(bool b)
+{
+     qDebug() << "dsdsadsa";
+    if(controlPoint.size() > 3)
+    {
+        drawHeart = b;
+    }else{
+        showError();
+    }
+    updateGL();
 
+}
 
 
 
