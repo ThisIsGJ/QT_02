@@ -132,13 +132,13 @@ void GLWidget::paintGL()
     glClear( GL_COLOR_BUFFER_BIT );
     glLoadIdentity();
     gluLookAt(xfrom,yfrom,zfrom, xto, yto, zto, upX, upY, upZ);
-    makeGround();
-    makeAxes();
+    makeGround();                   //draw the ground
+    makeAxes();                     //draw axes
     makeDice();
-    setPoint();
-    drawFrenetFrame();
-    drawCatmullRoom();
-    drawTheCylinder();
+    setPoint();                     //draw the point we have added on the screen
+    drawFrenetFrame();              //draw the frenet frame
+    drawCatmullRoom();              //draw the catmull room
+    drawTheCylinder();              //draw the cylinder
 }
 
 /* 2D */
@@ -224,12 +224,13 @@ void GLWidget::help()
     QMessageBox::information( this, title, mess, QMessageBox::Ok );
 }
 
+//set the state
 void GLWidget::setState(int s)
 {
     xto = yto = zto = 0;
     state = s;
 
-    if(state == 0)
+    if(state == 0)                      //perspective view
     {
         angleX = atan(1);
         angleY = atan(10/sqrt(200));
@@ -238,18 +239,18 @@ void GLWidget::setState(int s)
         yfrom = 10;
         xfrom = 10;
         zfrom = 10;
-    }else if(state == 1){
+    }else if(state == 1){                //top view
         upX = 0; upY = 0; upZ = -1;
         xfrom = 0;
         yfrom = 10;
         zfrom = 0;
-    }else if(state == 2)
+    }else if(state == 2)                //right view
     {
         upX = 0; upY = 1; upZ = 0;
         xfrom = 10;
         yfrom = 0;
         zfrom = 0;
-    }else if(state == 3)
+    }else if(state == 3)                //front view
     {
         upX = 0; upY = 1; upZ = 0;
         xfrom = 0;
@@ -458,7 +459,7 @@ void GLWidget::getViewPoint()
 void GLWidget::setPoint(){
 
     glColor3f(0,0,1);
-    glPointSize(20);
+    glPointSize(10);
     glBegin(GL_POINTS);
     for(int i = 0; i < controlPoint.size(); i++)
     {
@@ -474,6 +475,7 @@ void GLWidget::setPoint(){
 
 }
 
+//delete all the point that we have added
 void GLWidget::deletePoint()
 {
     if(theMovePoint != -1)
@@ -537,7 +539,6 @@ void GLWidget::drawTheCylinder()
 
 void GLWidget::frenetFrameMove(int time)
 {
-    //qDebug() << time;
     timeID = time;
     updateGL();
 }
@@ -554,8 +555,7 @@ void GLWidget::drawFrenetFrame()
             theNumberOfcp = controlPoint.size()-3;
             tPosition = 0.99999;
         }
-        qDebug() << theNumberOfcp-1;
-        qDebug() << tPosition;
+
         if(drawFrenet){
             glColor3f(1,0,0);
             glBegin(GL_LINES);
@@ -616,8 +616,11 @@ void GLWidget::drawFrenetFrame()
 
 }
 
+
+//set the factor for all the drawing work
 void GLWidget::setFactor(int i){
 
+    //Px = Ax*t^3 + Bx*t^2 + Cx*t + Dx
     Ax = -0.5*controlPoint[i-1][0] + 1.5*controlPoint[i][0] - 1.5*controlPoint[i+1][0] + 0.5*controlPoint[i+2][0];
     Ay = -0.5*controlPoint[i-1][1] + 1.5*controlPoint[i][1] - 1.5*controlPoint[i+1][1] + 0.5*controlPoint[i+2][1];
     Az = -0.5*controlPoint[i-1][2] + 1.5*controlPoint[i][2] - 1.5*controlPoint[i+1][2] + 0.5*controlPoint[i+2][2];
@@ -642,7 +645,7 @@ void GLWidget::setFactor(int i){
             sqrt(pow((3*Ax*tPosition*tPosition + 2*Bx*tPosition +Cx),2)
                      + pow((3*Ay*tPosition*tPosition + 2*By*tPosition +Cy),2) + pow((3*Az*tPosition*tPosition + 2*Bz*tPosition +Cz),2));
 
-    //Q ACCELERATION
+    //unit vector of acceleration
     Qx = 6*Ax*tPosition+2*Bx;
     Qy = 6*Ay*tPosition+2*By;
     Qz = 6*Az*tPosition+2*Bz;
@@ -651,7 +654,7 @@ void GLWidget::setFactor(int i){
     py = Dy + tPosition*Cy + tPosition*tPosition*By + tPosition*tPosition*tPosition*Ay;
     pz = Dz + tPosition*Cz + tPosition*tPosition*Bz + tPosition*tPosition*tPosition*Az;
 
-    //tangent
+    //unit vector of tangent
     fVx = Vx;
     fVy = Vy;
     fVz = Vz;
@@ -815,34 +818,6 @@ void GLWidget::mouseMoveEvent ( QMouseEvent *e )
             }
         }
     }
-    /*
-    else if(state == 1){    //top view
-        if(left)
-        {
-            yfrom = 10;
-            yto = 0;
-            zto = zfrom = zfrom - (mouseY - mClickLocationY)/20.0;
-            xto = xfrom = xfrom + (mouseX - mClickLocationX)/20.0;
-        }
-    }else if(state == 2){
-        if(left)
-        {
-            xfrom = 10;
-            xto = 0;
-            zto = zfrom = zfrom - (mouseX - mClickLocationX)/20.0;
-            yto = yfrom = yfrom+ (mouseY - mClickLocationY)/20.0;
-        }
-
-    }else if(state == 3){
-        if(left){
-            zfrom = 10;
-            zto = 0;
-            xto = xfrom = xfrom + (mouseX - mClickLocationX)/20.0;
-            yto = yfrom = yfrom + (mouseY - mClickLocationY)/20.0;
-        }
-    }
-    */
-
 
     mClickLocationX = mouseX;
     mClickLocationY = mouseY;
